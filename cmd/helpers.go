@@ -12,12 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package cmd
 
 import (
-	"github.com/twhiston/dm/cmd"
+	"github.com/GianlucaGuarini/go-observable"
+	"github.com/twhiston/dm/process"
 )
 
-func main() {
-	cmd.Execute()
+func SetUpListeners() *observable.Observable {
+
+	var processes = [...]process.Process{process.Nfs{}, process.Mariadb{}}
+
+	o := observable.New()
+
+	for _, p := range processes {
+		p.AddListeners(o)
+	}
+	return o
 }

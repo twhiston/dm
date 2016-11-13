@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package process
 
-import (
-	"github.com/twhiston/dm/cmd"
-)
+import "github.com/GianlucaGuarini/go-observable"
 
-func main() {
-	cmd.Execute()
+type Process interface {
+	AddListeners(o *observable.Observable)
+	//CheckRequirements() error
 }

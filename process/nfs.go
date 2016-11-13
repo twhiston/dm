@@ -12,12 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package main
+package process
 
 import (
-	"github.com/twhiston/dm/cmd"
+	"github.com/GianlucaGuarini/go-observable"
+	"fmt"
 )
 
-func main() {
-	cmd.Execute()
+type Nfs struct {
+
+}
+
+func (n Nfs) AddListeners(o *observable.Observable) {
+	o.On("start", func() {
+		fmt.Println("nfs says hello")
+	})
 }
