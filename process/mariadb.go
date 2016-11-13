@@ -17,6 +17,7 @@ package process
 import (
 	"github.com/GianlucaGuarini/go-observable"
 	"fmt"
+	"os"
 )
 
 type Mariadb struct {
@@ -24,7 +25,15 @@ type Mariadb struct {
 }
 
 func (n Mariadb) AddListeners(o *observable.Observable) {
-	o.On("start", func() {
+	o.On("start", func(cfgFilePath string) {
 		fmt.Println("Mariadb says hello")
 	})
+}
+
+func (n Mariadb) CheckRequirements(strict bool) error {
+	err := rDocker{}.meetsRequirements()
+	if strict {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 }

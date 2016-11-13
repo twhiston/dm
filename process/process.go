@@ -18,5 +18,5 @@ import "github.com/GianlucaGuarini/go-observable"
 
 type Process interface {
 	AddListeners(o *observable.Observable)
-	//CheckRequirements() error
+	CheckRequirements(strict bool) error
 }

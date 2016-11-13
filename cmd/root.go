@@ -23,7 +23,7 @@ import (
 	"runtime"
 )
 
-var cfgFile string
+var cfgFilePath string
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -55,8 +55,7 @@ func init() {
 	// Here you will define your flags and configuration settings.
 	// Cobra supports Persistent Flags, which, if defined here,
 	// will be global for your application.
-
-	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.dm/dm.yml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "", "config file (default is $HOME/.dm/dm.yml)")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
@@ -71,8 +70,8 @@ type defaultPaths struct {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 
-	if cfgFile != "" { // enable ability to specify config file via flag
-		viper.SetConfigFile(cfgFile)
+	if cfgFilePath != "" { // enable ability to specify config file via flag
+		viper.SetConfigFile(cfgFilePath)
 	}
 
 	configPath := getConfigPath()

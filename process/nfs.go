@@ -17,6 +17,7 @@ package process
 import (
 	"github.com/GianlucaGuarini/go-observable"
 	"fmt"
+	"os"
 )
 
 type Nfs struct {
@@ -24,7 +25,15 @@ type Nfs struct {
 }
 
 func (n Nfs) AddListeners(o *observable.Observable) {
-	o.On("start", func() {
+	o.On("start", func(cfgFilePath string) {
 		fmt.Println("nfs says hello")
 	})
+}
+
+func (n Nfs) CheckRequirements(strict bool) error {
+	err := rOsx{}.meetsRequirements()
+	if strict {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 }

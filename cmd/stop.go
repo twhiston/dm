@@ -25,7 +25,7 @@ var stopCmd = &cobra.Command{
 	Long: `Stop the local environment`,
 	Run: func(cmd *cobra.Command, args []string) {
 		o := SetUpListeners()
-		o.Trigger("stop")
+		o.Trigger("stop", cfgFilePath)
 	},
 }
 
