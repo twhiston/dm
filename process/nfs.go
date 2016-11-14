@@ -18,6 +18,8 @@ import (
 	"github.com/GianlucaGuarini/go-observable"
 	"fmt"
 	"os"
+	"github.com/spf13/viper"
+	"github.com/libgit2/git2go"
 )
 
 type Nfs struct {
@@ -25,15 +27,38 @@ type Nfs struct {
 }
 
 func (n Nfs) AddListeners(o *observable.Observable) {
-	o.On("start", func(cfgFilePath string) {
-		fmt.Println("nfs says hello")
-	})
+	o.On("start", Nfs.start)
 }
 
-func (n Nfs) CheckRequirements(strict bool) error {
+func (n Nfs) start(cfgFilePath string) {
+	fmt.Println("	---> Setup NFS shares")
+	var nfsDir = cfgFilePath + "/d4m-nfs"
+
+	if _, err := os.Stat(nfsDir); os.IsNotExist(err) {
+		//If the directory doesn't exist then make it and clone the helper repo we are using
+		fmt.Print("Creating nfs mount script dir: ")
+		fmt.Println(nfsDir)
+		handleError(os.Mkdir(nfsDir, 0755))
+		_, err = git.Clone("https://github.com/IFSight/d4m-nfs", nfsDir, &git.CloneOptions{})
+		handleError(err)
+		//Now the repo is cloned copy in our unique assets
+		//Get the data from the config file
+		//Turn it into a text file and write it to the /etc/folder
+		//data := getAsset("nfs/d4m-nfs-mounts.txt")
+		//writeAsset(nfsDir+"/etc/d4m-nfs-mounts.txt", data)
+	}
+
+	//Run the command
+	runScript(nfsDir + "/d4m-nfs.sh")
+}
+
+func (n Nfs) CheckRequirements(strict bool) {
 	err := rOsx{}.meetsRequirements()
 	if strict {
-		fmt.Println(err.Error())
-		os.Exit(1)
+		handleError(err)
 	}
+
+	k := viper.AllKeys()
+	fmt.Println(k)
+
 }

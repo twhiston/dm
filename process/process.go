@@ -17,6 +17,11 @@ package process
 import "github.com/GianlucaGuarini/go-observable"
 
 type Process interface {
+	//Add any listeners that you need to the main observable.
+	//See list of triggers in readme
 	AddListeners(o *observable.Observable)
-	CheckRequirements(strict bool) error
+	//Check requirements should exit the whole command or do something to fix requirements issues
+	//As its a listener it cant return anything, so your requirements handling needs to deal with all issues
+	// or call os.Exit() with a sensible error message advising on a fix
+	CheckRequirements(strict bool)
 }

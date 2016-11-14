@@ -26,6 +26,7 @@ var stopCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		o := SetUpListeners()
 		o.Trigger("stop", cfgFilePath)
+		deleteLockFile(cfgFilePath)
 	},
 }
 
