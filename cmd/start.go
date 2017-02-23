@@ -16,9 +16,6 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"os"
-	"io/ioutil"
-	"fmt"
 )
 
 // startCmd represents the start command
@@ -30,7 +27,8 @@ var startCmd = &cobra.Command{
 		o := SetUpListeners()
 		strict, _ := cmd.PersistentFlags().GetBool("strict")
 		o.Trigger("check-requirements", strict)
-		createLockFile(cfgFilePath)
+		forceFlag, _ := cmd.PersistentFlags().GetBool("force")
+		createLockFile(cfgFilePath, forceFlag)
 		o.Trigger("start", cfgFilePath)
 	},
 }

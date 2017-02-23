@@ -21,7 +21,7 @@ import (
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "A brief description of your command",
+	Short: "Initialize your local environment for dm",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

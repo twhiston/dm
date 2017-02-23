@@ -17,9 +17,6 @@ package cmd
 import (
 	"github.com/GianlucaGuarini/go-observable"
 	"github.com/twhiston/dm/process"
-	"os"
-	"io/ioutil"
-	"fmt"
 )
 
 //Run this in your command to create an observer and pass it to the processes to add their listeners
@@ -36,30 +33,3 @@ func SetUpListeners() *observable.Observable {
 	return o
 }
 
-func getLockFileAbsolutePath(cfgFilePath string) string {
-	return cfgFilePath + "/.lock"
-}
-
-func createLockFile(cfgFilePath string) {
-	lockFile := getLockFileAbsolutePath(cfgFilePath)
-	forceFlag, _ := startCmd.PersistentFlags().GetBool("force")
-	if _, err := os.Stat(lockFile); os.IsNotExist(err) || forceFlag == true {
-
-		err := ioutil.WriteFile(lockFile, []byte("lock"), 0644)
-		if err != nil {
-			fmt.Println("Could not write lock file")
-			os.Exit(1)
-		}
-	} else {
-		fmt.Println("	Cannot start, lock file already exists, run -stop first")
-		os.Exit(1)
-	}
-}
-
-func deleteLockFile(cfgFilePath string) {
-	lockFile := getLockFileAbsolutePath(cfgFilePath)
-	_, err := os.Stat(lockFile)
-	if err == nil {
-		os.Remove(lockFile)
-	}
-}

@@ -52,7 +52,7 @@ func (n Mariadb) start(cfgFilePath string) {
 	}
 	//docker compose up the maria db
 	fmt.Println("	---> Starting mariadb container")
-	run("/bin/sh", "-c", "docker-compose -f "+mariaDir+"/maria.yml up -d")
+	runScript("/bin/sh", "-c", "docker-compose -f "+mariaDir+"/maria.yml up -d")
 
 	fmt.Println("	     Started mariadb, you can use it in your local environment docker-compose.yml")
 	fmt.Println("          	external_links:")

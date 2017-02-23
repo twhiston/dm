@@ -68,7 +68,7 @@ func init() {
 }
 
 func getConfigPath() string {
-	configPath := "$HOME/.dm"
+	configPath := "/Users/Shared/.dm"
 	if strings.HasPrefix(configPath, "$HOME") {
 		configPath = userHomeDir() + configPath[5:]
 	}
@@ -78,7 +78,7 @@ func getConfigPath() string {
 func createConfig() error {
 
 
-	cfgpath := getConfigPath() + "/dm.yml"
+	cfgpath := getConfigPath() + "/config.yml"
 	b, err := yaml.Marshal(viper.AllSettings())
 	if err != nil {
 		return err

@@ -34,9 +34,6 @@ var RootCmd = &cobra.Command{
 	adds a mariadb container
 	sets up socat for xdebug
 	sets up loopback for phpstorm docker integration`,
-// Uncomment the following line if your bare application
-// has an action associated with it:
-//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
@@ -82,7 +79,7 @@ func initConfig() {
 
 	configPath = createDataDir(configPath)
 	dPath := defaultPaths{
-		[]string{configPath+":"+configPath+":0:0", userHomeDir()+"/Sites:"+ userHomeDir()+"/Sites:501:20"},
+		[]string{configPath+":"+configPath+":0:0", userHomeDir()+":"+ userHomeDir()+":501:20"},
 	}
 	viper.SetDefault("nfs-paths",dPath.paths)
 
