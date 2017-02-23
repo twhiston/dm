@@ -18,6 +18,11 @@ import (
 	"github.com/twhiston/dm/cmd"
 )
 
+var (
+	// VERSION is set during build
+	VERSION = "0.0.1"
+)
+
 func main() {
-	cmd.Execute()
+	cmd.Execute(VERSION)
 }

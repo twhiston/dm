@@ -49,7 +49,7 @@ func (n Nfs) start(cfgFilePath string) {
 	}
 
 	//Run the command
-	runScript(nfsDir + "/d4m-nfs.sh")
+	RunScript(nfsDir + "/d4m-nfs.sh")
 }
 
 func (n Nfs) CheckRequirements(strict bool) {

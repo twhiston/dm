@@ -15,14 +15,9 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
-	"os"
 	"strings"
-	"gopkg.in/yaml.v2"
 )
-
 
 var configRst bool
 var configCreate bool
@@ -38,60 +33,22 @@ var configCmd = &cobra.Command{
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
-		fmt.Println("config called")
-		if configRst == true {
-			fmt.Println("Reset config file to defaults")
-			os.Remove(getConfigPath()+"/dm.yml")
-			configCreate = true
-		}
-		if configCreate == true {
-			createConfig()
-		}
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(configCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// configCmd.PersistentFlags().String("foo", "", "A help for foo")
-	configCmd.Flags().BoolVarP(&configRst,"reset", "r", false, "Reset config file")
-	configCmd.Flags().BoolVarP(&configCreate,"create", "c", false, "Create config file")
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
 }
 
 func getConfigPath() string {
-	configPath := "/Users/Shared/.dm"
+	configPath := userHomeDir() + "/.dm"
 	if strings.HasPrefix(configPath, "$HOME") {
 		configPath = userHomeDir() + configPath[5:]
 	}
 	return configPath
 }
 
-func createConfig() error {
-
-
-	cfgpath := getConfigPath() + "/config.yml"
-	b, err := yaml.Marshal(viper.AllSettings())
-	if err != nil {
-		return err
-	}
-
-	f, err := os.Create(cfgpath)
-	if err != nil {
-		return err
-	}
-
-	defer f.Close()
-
-	f.WriteString(string(b))
-
-	return nil
+func getConfigFileName() string {
+	return "config.yml"
 }
+

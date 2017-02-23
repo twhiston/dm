@@ -21,9 +21,15 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"runtime"
+	"github.com/twhiston/dm/process"
 )
 
 var cfgFilePath string
+
+var (
+	// VERSION is set during build
+	VERSION string
+)
 
 // RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
@@ -34,30 +40,27 @@ var RootCmd = &cobra.Command{
 	adds a mariadb container
 	sets up socat for xdebug
 	sets up loopback for phpstorm docker integration`,
+	// Uncomment the following line if your bare application
+	// has an action associated with it:
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("Dm Version: " + VERSION)
+	},
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
+func Execute(version string) {
+	VERSION = version
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
 }
 
-
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
-	// Cobra supports Persistent Flags, which, if defined here,
-	// will be global for your application.
 	RootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "", "config file (default is $HOME/.dm/dm.yml)")
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
-
 }
 
 type defaultPaths struct {
@@ -67,28 +70,32 @@ type defaultPaths struct {
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 
-	if cfgFilePath != "" { // enable ability to specify config file via flag
+	if cfgFilePath != "" {
+		// enable ability to specify config file via flag
 		viper.SetConfigFile(cfgFilePath)
 	}
 
 	configPath := getConfigPath()
-	viper.SetConfigName("dm") // name of config file (without extension)
+	viper.SetConfigName("config") // name of config file (without extension)
 	viper.SetConfigType("yml")
 	viper.AddConfigPath(configPath)  // adding home directory as first search path
 	viper.AutomaticEnv()          // read in environment variables that match
-
-	configPath = createDataDir(configPath)
-	dPath := defaultPaths{
-		[]string{configPath+":"+configPath+":0:0", userHomeDir()+":"+ userHomeDir()+":501:20"},
-	}
-	viper.SetDefault("nfs-paths",dPath.paths)
 
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	} else {
-		createConfig()
+		configPath = createDataDir(configPath)
+		dPath := defaultPaths{
+			[]string{configPath + ":" + configPath + ":0:0", userHomeDir() + ":" + userHomeDir() + ":501:20"},
+		}
+		viper.SetDefault("nfs-paths", dPath.paths)
+
+		output := process.RunScript("whoami")
+		viper.SetDefault("whoami", output)
+		uid := process.RunScript("id", "-u")
+		viper.SetDefault("uid", uid)
 	}
 }
 
@@ -104,7 +111,6 @@ func createDataDir(configPath string) string {
 
 	return configPath
 }
-
 
 func userHomeDir() string {
 	if runtime.GOOS == "windows" {

@@ -1,4 +1,4 @@
-// Copyright © 2016 Tom Whiston <tom.whiston@gmail.com>
+// Copyright © 2017 NAME HERE <EMAIL ADDRESS>
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,13 +15,18 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
+	"gopkg.in/yaml.v2"
+	"github.com/spf13/viper"
+	"os"
 )
 
-// initCmd represents the init command
-var initCmd = &cobra.Command{
-	Use:   "init",
-	Short: "Initialize your local environment for dm",
+// configCreateCmd represents the configCreate command
+var configCreateCmd = &cobra.Command{
+	Use:   "create",
+	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
@@ -29,24 +34,26 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		o := SetUpListeners()
-		o.Trigger("init")
+
+		cfgpath := getConfigPath() + "/" + getConfigFileName()
+		b, err := yaml.Marshal(viper.AllSettings())
+		if err != nil {
+			panic(err)
+		}
+
+		f, err := os.Create(cfgpath)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("Created config file: "+cfgpath)
+
+		defer f.Close()
+
+		f.WriteString(string(b))
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(initCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// initCmd.PersistentFlags().String("foo", "", "A help for foo")
-	initCmd.PersistentFlags().String("sharepath", "/Users/Shared/.dm", "Share path for sites")
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// initCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
+	configCmd.AddCommand(configCreateCmd)
 }
-
 
