@@ -15,15 +15,13 @@
 package process
 
 import (
-	"github.com/GianlucaGuarini/go-observable"
 	"fmt"
-	"os"
-	"github.com/spf13/viper"
+	"github.com/GianlucaGuarini/go-observable"
 	"github.com/libgit2/git2go"
+	"os"
 )
 
 type Nfs struct {
-
 }
 
 func (n Nfs) AddListeners(o *observable.Observable) {
@@ -50,15 +48,4 @@ func (n Nfs) start(cfgFilePath string) {
 
 	//Run the command
 	RunScript(nfsDir + "/d4m-nfs.sh")
-}
-
-func (n Nfs) CheckRequirements(strict bool) {
-	err := rOsx{}.meetsRequirements()
-	if strict {
-		HandleError(err)
-	}
-
-	k := viper.AllKeys()
-	fmt.Println(k)
-
 }

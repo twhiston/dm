@@ -36,7 +36,7 @@ var RootCmd = &cobra.Command{
 	Short: "Docker for mac bootstrapper",
 	Long: `Docker for Mac bootstrapper
 	Sets up NFS shares,
-	adds a mariadb container
+	adds local containers
 	sets up socat for xdebug
 	sets up loopback for phpstorm docker integration`,
 	// Uncomment the following line if your bare application
@@ -50,6 +50,8 @@ var RootCmd = &cobra.Command{
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute(version string) {
 	VERSION = version
+	fmt.Println("Docker for Mac Local Development Bootstrap Tool")
+	fmt.Println("Version: " + VERSION)
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -57,11 +59,10 @@ func Execute(version string) {
 }
 
 func init() {
+
 	cobra.OnInitialize(initConfig)
 
 	RootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "~/.dm/config.yml", "config file")
-	//flag.Lookup("config").NoOptDefVal = "~/.dm/config.yml"
-	RootCmd.PersistentFlags().StringP("data", "d", "/Users/Shared/.dm", "data directory")
 }
 
 type defaultPaths struct {
@@ -79,37 +80,22 @@ func initConfig() {
 	configPath := getConfigPath()
 	viper.SetConfigName("config") // name of config file (without extension)
 	viper.SetConfigType("yml")
-	viper.AddConfigPath(configPath)  // adding home directory as first search path
-	viper.AutomaticEnv()          // read in environment variables that match
-
+	viper.AddConfigPath(configPath) // adding home directory as first search path
+	viper.AutomaticEnv()            // read in environment variables that match
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	} else {
-		configPath = createDataDir(configPath)
 		dPath := defaultPaths{
 			[]string{configPath + ":" + configPath + ":0:0", userHomeDir() + ":" + userHomeDir() + ":501:20"},
 		}
 		viper.SetDefault("nfs-paths", dPath.paths)
-
 		output := process.RunScript("whoami")
 		viper.SetDefault("whoami", output)
 		uid := process.RunScript("id", "-u")
 		viper.SetDefault("uid", uid)
 		viper.SetDefault("data_dir", "/Users/Shared/.dm")
+		saveConfig()
 	}
-}
-
-func createDataDir(configPath string) string {
-
-	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		fmt.Println("Creating data dir: " + configPath)
-		err = os.Mkdir(configPath, 0755)
-		if err != nil {
-			fmt.Println("Could not create config directory:" + configPath + " try running with sudo ")
-		}
-	}
-
-	return configPath
 }

@@ -15,11 +15,9 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
-	"gopkg.in/yaml.v2"
 	"github.com/spf13/viper"
+	"gopkg.in/yaml.v2"
 	"os"
 )
 
@@ -34,22 +32,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
-		cfgpath := getConfigPath() + "/" + getConfigFileName()
-		b, err := yaml.Marshal(viper.AllSettings())
-		if err != nil {
-			panic(err)
-		}
-
-		f, err := os.Create(cfgpath)
-		if err != nil {
-			panic(err)
-		}
-		fmt.Println("Created config file: "+cfgpath)
-
-		defer f.Close()
-
-		f.WriteString(string(b))
+		saveConfig()
 	},
 }
 
@@ -57,3 +40,25 @@ func init() {
 	configCmd.AddCommand(configCreateCmd)
 }
 
+func saveConfig() {
+
+	configPath := getConfigPath()
+	configPath = createConfigDir(configPath)
+
+	cfgpath := getConfigPath() + "/" + getConfigFileName()
+	b, err := yaml.Marshal(viper.AllSettings())
+	if err != nil {
+		panic(err)
+	}
+
+	f, err := os.Create(cfgpath)
+	if err != nil {
+		panic(err)
+	}
+	//fmt.Println("Created config file: " + cfgpath)
+
+	defer f.Close()
+
+	f.WriteString(string(b))
+
+}

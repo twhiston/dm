@@ -24,13 +24,13 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add",
 	Short: "add a hosts file entry",
-	Long: `Add a site to the local hosts file entry`,
+	Long:  `Add a site to the local hosts file entry`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// read the whole file at once
 		hostFile, hostFileString := getHostsFile()
 		hostName, _ := hostsCmd.PersistentFlags().GetString("host")
 
-		if(hostExists(hostName, hostFileString)){
+		if hostExists(hostName, hostFileString) {
 			fmt.Println("host already exists in hosts file")
 			return
 		}
@@ -39,7 +39,7 @@ var addCmd = &cobra.Command{
 		hostString := getHostString(hostName)
 
 		//write string to file
-		err := appendStringToFile(hostFile, "\r\n" + hostString)
+		err := appendStringToFile(hostFile, "\r\n"+hostString)
 		if err != nil {
 			fmt.Println("Failed to add host to hosts file. You may need to run with sudo")
 			return
@@ -52,8 +52,3 @@ var addCmd = &cobra.Command{
 func init() {
 	hostsCmd.AddCommand(addCmd)
 }
-
-
-
-
-

@@ -15,9 +15,9 @@
 package cmd
 
 import (
-	"os"
-	"io/ioutil"
 	"fmt"
+	"io/ioutil"
+	"os"
 )
 
 func getLockFileAbsolutePath(cfgFilePath string) string {

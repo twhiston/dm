@@ -26,7 +26,7 @@ import (
 var rmCmd = &cobra.Command{
 	Use:   "rm",
 	Short: "remove a hosts file entry",
-	Long: `Remove a site from the local hosts file entry`,
+	Long:  `Remove a site from the local hosts file entry`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		hostFile, hostFileString := getHostsFile()
@@ -36,7 +36,7 @@ var rmCmd = &cobra.Command{
 			return
 		}
 
-		if(!hostExists(hostName, hostFileString)){
+		if !hostExists(hostName, hostFileString) {
 			fmt.Println("host does not exist in hosts file")
 			return
 		}

@@ -15,10 +15,10 @@
 package process
 
 import (
-	"os/exec"
 	"bytes"
 	"fmt"
 	"os"
+	"os/exec"
 )
 
 func RunScript(name string, args ...string) string {
@@ -39,7 +39,7 @@ func RunScript(name string, args ...string) string {
 //Print out an error and then die
 //Standard error functionality
 func HandleError(err error) {
-	if(err != nil) {
+	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}

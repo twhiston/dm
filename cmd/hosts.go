@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"os"
 	"io/ioutil"
+	"os"
 	"strings"
 )
 
@@ -52,7 +52,7 @@ func init() {
  *       put a newline '\n' at the of the string.
  */
 func appendStringToFile(path, text string) error {
-	f, err := os.OpenFile(path, os.O_APPEND | os.O_WRONLY, os.ModeAppend)
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
 		return err
 	}
@@ -65,7 +65,7 @@ func appendStringToFile(path, text string) error {
 	return nil
 }
 
-func getHostsFile() (string, string){
+func getHostsFile() (string, string) {
 	hostFile, err := hostsCmd.PersistentFlags().GetString("file")
 	hostFileData, err := ioutil.ReadFile(hostFile)
 	if err != nil {
@@ -75,7 +75,7 @@ func getHostsFile() (string, string){
 	return hostFile, string(hostFileData)
 }
 
-func hostExists(hostName string, hostFileString string) bool{
+func hostExists(hostName string, hostFileString string) bool {
 	//check if host exists
 	return strings.Contains(hostFileString, hostName)
 }

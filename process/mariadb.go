@@ -15,13 +15,12 @@
 package process
 
 import (
-	"github.com/GianlucaGuarini/go-observable"
 	"fmt"
+	"github.com/GianlucaGuarini/go-observable"
 	"os"
 )
 
 type Mariadb struct {
-
 }
 
 func (n Mariadb) AddListeners(o *observable.Observable) {
@@ -57,12 +56,4 @@ func (n Mariadb) start(cfgFilePath string) {
 	fmt.Println("	     Started mariadb, you can use it in your local environment docker-compose.yml")
 	fmt.Println("          	external_links:")
 	fmt.Println("              - mariadb_local")
-}
-
-func (n Mariadb) CheckRequirements(strict bool)  {
-	err := rDocker{}.meetsRequirements()
-	if strict {
-		HandleError(err)
-	}
-
 }

@@ -17,11 +17,11 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/spf13/cobra"
-	"os"
 	"github.com/libgit2/git2go"
-	"github.com/twhiston/dm/process"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"github.com/twhiston/dm/process"
+	"os"
 )
 
 // startNfsCmd represents the startNfs command
@@ -35,8 +35,30 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("	---> Start NFS shares")
+
+		if !viper.GetBool("nfsInit") {
+			fmt.Println("Nfs not initialized, run init")
+			os.Exit(1)
+		}
+		//Run the command
+		nfsDir := viper.GetString("data_dir") + "/nfs"
+		process.RunScript(nfsDir + "/d4m-nfs.sh")
+	},
+}
+
+var initNfsCmd = &cobra.Command{
+	Use:   "startNfs",
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
+	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("	---> Setup NFS shares")
-		nfsDir := viper.GetString("data_dir")+"/nfs"
+		nfsDir := viper.GetString("data_dir") + "/nfs"
 		fmt.Println(nfsDir)
 		if _, err := os.Stat(nfsDir); os.IsNotExist(err) {
 			//If the directory doesn't exist then make it and clone the helper repo we are using
@@ -51,14 +73,13 @@ to quickly create a Cobra application.`,
 			//data := getAsset("nfs/d4m-nfs-mounts.txt")
 			//writeAsset(nfsDir+"/etc/d4m-nfs-mounts.txt", data)
 		}
-
-		//Run the command
-		process.RunScript(nfsDir + "/d4m-nfs.sh")
+		viper.Set("nfsInit", true)
 	},
 }
 
 func init() {
 	startCmd.AddCommand(startNfsCmd)
+	initCmd.AddCommand(initNfsCmd)
 
 	// Here you will define your flags and configuration settings.
 

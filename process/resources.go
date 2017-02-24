@@ -182,9 +182,9 @@ func AssetNames() []string {
 
 // _bindata is a table, holding each asset generator, mapped to its name.
 var _bindata = map[string]func() (*asset, error){
-	"data/database/.env": dataDatabaseEnv,
+	"data/database/.env":          dataDatabaseEnv,
 	"data/nfs/d4m-nfs-mounts.txt": dataNfsD4mNfsMountsTxt,
-	"data/pxd.yml": dataPxdYml,
+	"data/pxd.yml":                dataPxdYml,
 }
 
 // AssetDir returns the file names below a certain
@@ -226,6 +226,7 @@ type bintree struct {
 	Func     func() (*asset, error)
 	Children map[string]*bintree
 }
+
 var _bintree = &bintree{nil, map[string]*bintree{
 	"data": &bintree{nil, map[string]*bintree{
 		"database": &bintree{nil, map[string]*bintree{
@@ -284,4 +285,3 @@ func _filePath(dir, name string) string {
 	cannonicalName := strings.Replace(name, "\\", "/", -1)
 	return filepath.Join(append([]string{dir}, strings.Split(cannonicalName, "/")...)...)
 }
-

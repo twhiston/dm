@@ -22,10 +22,9 @@ import (
 var stopCmd = &cobra.Command{
 	Use:   "stop",
 	Short: "Stop the local environment",
-	Long: `Stop the local environment`,
+	Long:  `Stop the local environment`,
 	Run: func(cmd *cobra.Command, args []string) {
-		o := SetUpListeners()
-		o.Trigger("stop", cfgFilePath)
+
 		deleteLockFile(cfgFilePath)
 	},
 }

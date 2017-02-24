@@ -15,10 +15,11 @@
 package cmd
 
 import (
+	"fmt"
 	"github.com/spf13/cobra"
-	"strings"
-	"runtime"
 	"os"
+	"runtime"
+	"strings"
 )
 
 var configRst bool
@@ -34,8 +35,6 @@ var configCmd = &cobra.Command{
 		Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-	},
 }
 
 func init() {
@@ -65,3 +64,15 @@ func userHomeDir() string {
 	return os.Getenv("HOME")
 }
 
+func createConfigDir(configPath string) string {
+
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		fmt.Println("Creating data dir: " + configPath)
+		err = os.Mkdir(configPath, 0755)
+		if err != nil {
+			fmt.Println("Could not create config directory:" + configPath + " try running with sudo ")
+		}
+	}
+
+	return configPath
+}
