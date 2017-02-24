@@ -20,7 +20,6 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"runtime"
 	"github.com/twhiston/dm/process"
 )
 
@@ -60,7 +59,9 @@ func Execute(version string) {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	RootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "", "config file (default is $HOME/.dm/dm.yml)")
+	RootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "~/.dm/config.yml", "config file")
+	//flag.Lookup("config").NoOptDefVal = "~/.dm/config.yml"
+	RootCmd.PersistentFlags().StringP("data", "d", "/Users/Shared/.dm", "data directory")
 }
 
 type defaultPaths struct {
@@ -96,6 +97,7 @@ func initConfig() {
 		viper.SetDefault("whoami", output)
 		uid := process.RunScript("id", "-u")
 		viper.SetDefault("uid", uid)
+		viper.SetDefault("data_dir", "/Users/Shared/.dm")
 	}
 }
 
@@ -110,15 +112,4 @@ func createDataDir(configPath string) string {
 	}
 
 	return configPath
-}
-
-func userHomeDir() string {
-	if runtime.GOOS == "windows" {
-		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
-		if home == "" {
-			home = os.Getenv("USERPROFILE")
-		}
-		return home
-	}
-	return os.Getenv("HOME")
 }

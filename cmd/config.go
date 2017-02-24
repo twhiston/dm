@@ -17,6 +17,8 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 	"strings"
+	"runtime"
+	"os"
 )
 
 var configRst bool
@@ -50,5 +52,16 @@ func getConfigPath() string {
 
 func getConfigFileName() string {
 	return "config.yml"
+}
+
+func userHomeDir() string {
+	if runtime.GOOS == "windows" {
+		home := os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
+		if home == "" {
+			home = os.Getenv("USERPROFILE")
+		}
+		return home
+	}
+	return os.Getenv("HOME")
 }
 

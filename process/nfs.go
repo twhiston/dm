@@ -38,9 +38,9 @@ func (n Nfs) start(cfgFilePath string) {
 		//If the directory doesn't exist then make it and clone the helper repo we are using
 		fmt.Print("Creating nfs mount script dir: ")
 		fmt.Println(nfsDir)
-		handleError(os.Mkdir(nfsDir, 0755))
+		HandleError(os.Mkdir(nfsDir, 0755))
 		_, err = git.Clone("https://github.com/IFSight/d4m-nfs", nfsDir, &git.CloneOptions{})
-		handleError(err)
+		HandleError(err)
 		//Now the repo is cloned copy in our unique assets
 		//Get the data from the config file
 		//Turn it into a text file and write it to the /etc/folder
@@ -55,7 +55,7 @@ func (n Nfs) start(cfgFilePath string) {
 func (n Nfs) CheckRequirements(strict bool) {
 	err := rOsx{}.meetsRequirements()
 	if strict {
-		handleError(err)
+		HandleError(err)
 	}
 
 	k := viper.AllKeys()

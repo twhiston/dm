@@ -18,12 +18,13 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"os"
+	"os/exec"
+	"github.com/twhiston/dm/process"
 )
 
-// configDeleteCmd represents the configDelete command
-var configDeleteCmd = &cobra.Command{
-	Use:   "rm",
+// startXdebugCmd represents the startXdebug command
+var startXdebugCmd = &cobra.Command{
+	Use:   "startXdebug",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -32,13 +33,25 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Removing config file")
-		cfgpath := getConfigPath() + "/" + getConfigFileName()
-		os.Remove(cfgpath)
-		configCreate = true
+		fmt.Println("	---> Ensure loopback to 10.254.254.254 exists for xdebug listeners")
+		process.RunScript("/bin/sh", "-c", "sudo ifconfig lo0 alias 10.254.254.254")
+		fmt.Println("	---> Run socat for phpstorm docker integration on http://127.0.0.1:2376")
+		command := exec.Command("/bin/sh", "-c", "socat TCP-LISTEN:2376,reuseaddr,fork,bind=127.0.0.1 UNIX-CLIENT:/var/run/docker.sock")
+		command.Start()
 	},
 }
 
 func init() {
-	configCmd.AddCommand(configDeleteCmd)
+	startCmd.AddCommand(startXdebugCmd)
+
+	// Here you will define your flags and configuration settings.
+
+	// Cobra supports Persistent Flags which will work for this command
+	// and all subcommands, e.g.:
+	// startXdebugCmd.PersistentFlags().String("foo", "", "A help for foo")
+
+	// Cobra supports local flags which will only run when this command
+	// is called directly, e.g.:
+	// startXdebugCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
 }

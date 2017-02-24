@@ -38,7 +38,7 @@ func RunScript(name string, args ...string) string {
 
 //Print out an error and then die
 //Standard error functionality
-func handleError(err error) {
+func HandleError(err error) {
 	if(err != nil) {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)

@@ -38,18 +38,9 @@ var hostsCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(hostsCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// hostsCmd.PersistentFlags().String("foo", "", "A help for foo")
 	hostsCmd.PersistentFlags().String("host", "", "The hostname to add")
 	hostsCmd.PersistentFlags().String("file", "/private/etc/hosts", "Full path to hostsfile")
 	hostsCmd.PersistentFlags().String("dhost", "0.0.0.0", "IP of the docker host")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// hostsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }
 

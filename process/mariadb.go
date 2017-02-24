@@ -35,12 +35,12 @@ func (n Mariadb) start(cfgFilePath string) {
 		//Install stuff if it doesnt exist
 		fmt.Print("		---> Creating mariadb dir: ")
 		fmt.Println(mariaDir)
-		handleError(os.Mkdir(mariaDir, 0755))
+		HandleError(os.Mkdir(mariaDir, 0755))
 
 		fmt.Print("		---> Creating mariadb data dir: ")
 		var mariaDataDir = mariaDir + "/data"
 		fmt.Println(mariaDataDir)
-		handleError(os.Mkdir(mariaDataDir, 0755))
+		HandleError(os.Mkdir(mariaDataDir, 0755))
 
 		fmt.Println("		---> Copying docker assets: ")
 		data := getAsset("database/.env")
@@ -62,7 +62,7 @@ func (n Mariadb) start(cfgFilePath string) {
 func (n Mariadb) CheckRequirements(strict bool)  {
 	err := rDocker{}.meetsRequirements()
 	if strict {
-		handleError(err)
+		HandleError(err)
 	}
 
 }

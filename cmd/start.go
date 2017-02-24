@@ -24,28 +24,25 @@ var startCmd = &cobra.Command{
 	Short: "Start the Docker 4 Mac local Environment",
 	Long: `Start the local environment by running all of the Extensions`,
 	Run: func(cmd *cobra.Command, args []string) {
-		o := SetUpListeners()
-		strict, _ := cmd.PersistentFlags().GetBool("strict")
-		o.Trigger("check-requirements", strict)
-		forceFlag, _ := cmd.PersistentFlags().GetBool("force")
-		createLockFile(cfgFilePath, forceFlag)
-		o.Trigger("start", cfgFilePath)
+		for _,element := range cmd.Commands() {
+			// element is the element from someSlice for where we are
+			element.Run(cmd, args);
+		}
+		//cmd.Commands()
+		//o := SetUpListeners()
+		//strict, _ := cmd.PersistentFlags().GetBool("strict")
+		//o.Trigger("check-requirements", strict)
+		//forceFlag, _ := cmd.PersistentFlags().GetBool("force")
+		//createLockFile(cfgFilePath, forceFlag)
+		//o.Trigger("start", cfgFilePath)
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(startCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// startCmd.PersistentFlags().String("foo", "", "A help for foo")
 	startCmd.PersistentFlags().BoolP("force", "f", false, "Force the start command to run even if a lock file exists")
 	startCmd.PersistentFlags().BoolP("strict", "s", true, "Stop running if requirements are not met")
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }
 
