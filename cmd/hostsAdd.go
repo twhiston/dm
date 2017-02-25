@@ -44,7 +44,7 @@ var addCmd = &cobra.Command{
 		hostString := getHostString(hostName)
 
 		//write string to file
-		err := appendStringToFile(hostFile, "\r\n"+hostString)
+		err := appendStringToFile(hostFile, "\n"+hostString)
 		if err != nil {
 			fmt.Println("Failed to add host to hosts file. You may need to run with sudo")
 			return

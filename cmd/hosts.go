@@ -35,12 +35,23 @@ var hostsCmd = &cobra.Command{
 	},
 }
 
+var hostsListCmd = &cobra.Command{
+	Use:   "list",
+	Short: "list hosts file entries",
+	Run: func(cmd *cobra.Command, args []string) {
+		_, hostFileString := getHostsFile()
+		fmt.Print(hostFileString)
+	},
+}
+
 func init() {
 	RootCmd.AddCommand(hostsCmd)
 
 	hostsCmd.PersistentFlags().String("host", "", "The hostname to add")
 	hostsCmd.PersistentFlags().String("file", "/private/etc/hosts", "Full path to hostsfile")
 	hostsCmd.PersistentFlags().String("dhost", "0.0.0.0", "IP of the docker host")
+
+	hostsCmd.AddCommand(hostsListCmd)
 
 }
 
