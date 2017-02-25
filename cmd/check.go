@@ -28,7 +28,7 @@ import (
 var checkCmd = &cobra.Command{
 	Use:   "check",
 	Short: "Test for all requirements",
-	Long: `Running this without a subcommand will execute all the requirements checks`,
+	Long:  `Running this without a subcommand will execute all the requirements checks`,
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, element := range cmd.Commands() {
 			// element is the element from someSlice for where we are

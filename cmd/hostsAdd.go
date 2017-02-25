@@ -30,7 +30,7 @@ var addCmd = &cobra.Command{
 		hostFile, hostFileString := getHostsFile()
 		hostName, _ := hostsCmd.PersistentFlags().GetString("host")
 
-		if(hostName == ""){
+		if hostName == "" {
 			fmt.Println("--host cannot be blank")
 			return
 		}

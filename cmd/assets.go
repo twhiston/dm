@@ -19,7 +19,7 @@ func WriteAsset(location string, asset []byte) {
 
 	err := ioutil.WriteFile(location, []byte(asset), 0644)
 	if err != nil {
-		fmt.Println("Could not write file: "+location)
+		fmt.Println("Could not write file: " + location)
 		os.Exit(1)
 	}
 }

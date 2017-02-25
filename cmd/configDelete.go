@@ -25,7 +25,7 @@ import (
 var configDeleteCmd = &cobra.Command{
 	Use:   "rm",
 	Short: "Remove the config file",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("Removing config file")
 		cfgpath := getConfigPath() + "/" + getConfigFileName()

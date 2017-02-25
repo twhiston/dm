@@ -25,7 +25,7 @@ import (
 var containersCmd = &cobra.Command{
 	Use:   "z_containers",
 	Short: "start the containers only",
-	Long: `The weird command name ensure that this gets sorted last in the child commands :(`,
+	Long:  `The weird command name ensure that this gets sorted last in the child commands :(`,
 	Run: func(cmd *cobra.Command, args []string) {
 		//docker compose up
 		fmt.Println("	---> Starting dm containers")

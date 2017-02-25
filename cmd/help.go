@@ -15,9 +15,8 @@
 package cmd
 
 import (
-
-	"github.com/spf13/cobra"
 	"fmt"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
 	"path"
@@ -63,6 +62,5 @@ func init() {
 	helpCmd.AddCommand(helpVersionCmd)
 
 	helpCmd.AddCommand(pwdCmd)
-
 
 }

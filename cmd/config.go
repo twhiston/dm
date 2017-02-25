@@ -29,7 +29,7 @@ var configCreate bool
 var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "Manage dm local config file",
-	Long: ``,
+	Long:  ``,
 }
 
 func init() {

@@ -17,9 +17,9 @@ package cmd
 import (
 	"fmt"
 
+	"bytes"
 	"github.com/spf13/cobra"
 	"os/exec"
-	"bytes"
 )
 
 // listCmd represents the list command

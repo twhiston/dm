@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"os"
 	"github.com/spf13/viper"
+	"os"
 )
 
 // mariadbCmd represents the mariadb command

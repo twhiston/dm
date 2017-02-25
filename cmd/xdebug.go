@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"os/exec"
 	"github.com/spf13/viper"
+	"os/exec"
 )
 
 // startXdebugCmd represents the startXdebug command

@@ -25,7 +25,7 @@ import (
 var configCreateCmd = &cobra.Command{
 	Use:   "create",
 	Short: "Create a basic config file",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		saveConfig()
 	},

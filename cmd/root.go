@@ -18,10 +18,10 @@ import (
 	"fmt"
 	"os"
 
+	"bytes"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os/exec"
-	"bytes"
 )
 
 var cfgFilePath string
@@ -118,9 +118,8 @@ func RunScript(name string, args ...string) string {
 func HandleError(err error, soft bool) {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
-		if (!soft) {
+		if !soft {
 			os.Exit(1)
 		}
 	}
 }
-

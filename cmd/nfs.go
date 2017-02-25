@@ -76,7 +76,7 @@ var initNfsCmd = &cobra.Command{
 		s += uid + ":" + viper.GetString("group") + " \n"
 		s = strings.TrimSpace(s)
 		data = []byte(s)
-		WriteAsset(nfsDir + "/etc/d4m-nfs-mounts.txt", data)
+		WriteAsset(nfsDir+"/etc/d4m-nfs-mounts.txt", data)
 		viper.Set("init.nfs", true)
 		fmt.Println("	---> nfs initialized <---")
 	},

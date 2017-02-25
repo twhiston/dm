@@ -15,10 +15,10 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
-	"os"
 	"fmt"
+	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"os"
 )
 
 // initCmd represents the init command
@@ -43,7 +43,7 @@ to quickly create a Cobra application.`,
 		}
 
 		data := GetAsset("dm.yml")
-		WriteAsset(dir+"/dm.yml",data)
+		WriteAsset(dir+"/dm.yml", data)
 
 		for _, element := range cmd.Commands() {
 			// element is the element from someSlice for where we are
