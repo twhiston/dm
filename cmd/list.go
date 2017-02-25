@@ -19,12 +19,12 @@ import (
 
 	"github.com/spf13/cobra"
 	"os/exec"
-	"github.com/spf13/viper"
+	"bytes"
 )
 
-// startXdebugCmd represents the startXdebug command
-var startXdebugCmd = &cobra.Command{
-	Use:   "xdebug",
+// listCmd represents the list command
+var listCmd = &cobra.Command{
+	Use:   "list",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -33,16 +33,19 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("	---> Setup Xdebug Loopbacks")
-		fmt.Println("		---> Ensuring loopback to 10.254.254.254 exists for xdebug listeners")
-		RunScript("/bin/sh", "-c", "sudo ifconfig lo0 alias 10.254.254.254")
-		fmt.Println("		---> Run socat for phpstorm docker integration on http://127.0.0.1:2376")
-		command := exec.Command("/bin/sh", "-c", "socat TCP-LISTEN:2376,reuseaddr,fork,bind=127.0.0.1 UNIX-CLIENT:/var/run/docker.sock")
-		command.Start()
-		viper.Set("init.xdebug", true)
+		listContainers()
 	},
 }
 
 func init() {
-	startCmd.AddCommand(startXdebugCmd)
+	RootCmd.AddCommand(listCmd)
+}
+
+func listContainers() {
+	fmt.Println("	---> Listing Running Docker Containers")
+	cmd := exec.Command("docker", "ps")
+	var out bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Run()
+	fmt.Print(out.String())
 }

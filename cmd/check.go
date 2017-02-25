@@ -28,12 +28,7 @@ import (
 var checkCmd = &cobra.Command{
 	Use:   "check",
 	Short: "Test for all requirements",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Long: `Running this without a subcommand will execute all the requirements checks`,
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, element := range cmd.Commands() {
 			// element is the element from someSlice for where we are
@@ -105,7 +100,7 @@ var apacheReqCmd = &cobra.Command{
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := exec.Command("apachectl", "stop").Run(); err != nil {
-			return errors.New("	---> Could not stop apache, try again with root")
+			return errors.New("	---> Could not stop apache, try again with\n sudo dm check")
 		}
 		return nil
 	},

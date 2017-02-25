@@ -20,28 +20,28 @@ import (
 	"os"
 )
 
-func getLockFileAbsolutePath(cfgFilePath string) string {
-	return cfgFilePath + "/.lock"
+func getLockFileAbsolutePath() string {
+	return getConfigPath() + "/.lock"
 }
 
-func createLockFile(cfgFilePath string, forceFlag bool) {
-	lockFile := getLockFileAbsolutePath(cfgFilePath)
+func createLockFile(forceFlag bool) {
+	lockFile := getLockFileAbsolutePath()
 
 	if _, err := os.Stat(lockFile); os.IsNotExist(err) || forceFlag == true {
 
 		err := ioutil.WriteFile(lockFile, []byte("lock"), 0644)
 		if err != nil {
-			fmt.Println("Could not write lock file")
+			fmt.Println("Could not write lock file: " + lockFile)
 			os.Exit(1)
 		}
 	} else {
-		fmt.Println("	Cannot start, lock file already exists, run -stop first")
+		fmt.Println("	Cannot start, lock file already exists, run stop first or use -f --force flag")
 		os.Exit(1)
 	}
 }
 
-func deleteLockFile(cfgFilePath string) {
-	lockFile := getLockFileAbsolutePath(cfgFilePath)
+func deleteLockFile() {
+	lockFile := getLockFileAbsolutePath()
 	_, err := os.Stat(lockFile)
 	if err == nil {
 		os.Remove(lockFile)

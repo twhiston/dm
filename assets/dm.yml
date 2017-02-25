@@ -11,9 +11,11 @@ services:
     volumes:
       # Database data folder
       # local hidden dir in the user root is used for this, so destroying the container wont delete the db data
-      - /Users/Shared/.dm/maria/data:/var/lib/mysql
+      - ./maria/data:/var/lib/mysql
     networks:
       - bridge
+    environment:
+      - VIRTUAL_HOST=mariadb.dev
 
   selenium:
     image: selenium/standalone-chrome
@@ -22,6 +24,8 @@ services:
       - 4444:4444
     networks:
       - bridge
+    environment:
+      - VIRTUAL_HOST=selenium.dev
 
   proxy:
     image: jwilder/nginx-proxy

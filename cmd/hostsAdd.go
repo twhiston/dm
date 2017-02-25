@@ -30,6 +30,11 @@ var addCmd = &cobra.Command{
 		hostFile, hostFileString := getHostsFile()
 		hostName, _ := hostsCmd.PersistentFlags().GetString("host")
 
+		if(hostName == ""){
+			fmt.Println("--host cannot be blank")
+			return
+		}
+
 		if hostExists(hostName, hostFileString) {
 			fmt.Println("host already exists in hosts file")
 			return

@@ -16,6 +16,8 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"fmt"
+	"github.com/spf13/viper"
 )
 
 // stopCmd represents the stop command
@@ -25,7 +27,10 @@ var stopCmd = &cobra.Command{
 	Long:  `Stop the local environment`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		deleteLockFile(cfgFilePath)
+		deleteLockFile()
+		fmt.Println("	---> Stopping pxd containers")
+		RunScript("/bin/sh", "-c", "docker-compose -f "+viper.GetString("data_dir")+"/dm.yml stop")
+		listContainers()
 	},
 }
 

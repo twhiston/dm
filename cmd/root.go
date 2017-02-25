@@ -20,7 +20,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
-	"github.com/twhiston/dm/process"
+	"os/exec"
+	"bytes"
 )
 
 var cfgFilePath string
@@ -41,17 +42,15 @@ var RootCmd = &cobra.Command{
 	sets up loopback for phpstorm docker integration`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("Dm Version: " + VERSION)
-	},
+	//Run: func(cmd *cobra.Command, args []string) {
+	//
+	//},
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute(version string) {
 	VERSION = version
-	fmt.Println("Docker for Mac Local Development Bootstrap Tool")
-	fmt.Println("Version: " + VERSION)
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -61,7 +60,6 @@ func Execute(version string) {
 func init() {
 
 	cobra.OnInitialize(initConfig)
-
 	RootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "~/.dm/config.yml", "config file")
 }
 
@@ -85,17 +83,44 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		fmt.Println("Using config file:", viper.ConfigFileUsed())
+		//fmt.Println("Using config file:", viper.ConfigFileUsed())
 	} else {
-		dPath := defaultPaths{
-			[]string{configPath + ":" + configPath + ":0:0", userHomeDir() + ":" + userHomeDir() + ":501:20"},
-		}
-		viper.SetDefault("nfs-paths", dPath.paths)
-		output := process.RunScript("whoami")
+		viper.Set("version", VERSION)
+		viper.SetDefault("share_dir", userHomeDir())
+		output := RunScript("whoami")
 		viper.SetDefault("whoami", output)
-		uid := process.RunScript("id", "-u")
+		uid := RunScript("id", "-u")
 		viper.SetDefault("uid", uid)
+		group := RunScript("id", "-g")
+		viper.SetDefault("group", group)
 		viper.SetDefault("data_dir", "/Users/Shared/.dm")
 		saveConfig()
 	}
 }
+
+func RunScript(name string, args ...string) string {
+	cmd := exec.Command(name, args...)
+	var out, stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println(err.Error() + ":" + stderr.String())
+		os.Exit(1)
+	}
+	output := out.String()
+	//fmt.Print(output)
+	return output
+}
+
+//Print out an error and then die
+//Standard error functionality
+func HandleError(err error, soft bool) {
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		if (!soft) {
+			os.Exit(1)
+		}
+	}
+}
+

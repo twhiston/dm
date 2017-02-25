@@ -24,15 +24,13 @@ var startCmd = &cobra.Command{
 	Short: "Start the Docker 4 Mac local Environment",
 	Long:  `Start the local environment by running all of the Extensions`,
 	Run: func(cmd *cobra.Command, args []string) {
+		forceFlag, _ := cmd.PersistentFlags().GetBool("force")
+		createLockFile(forceFlag)
+
 		for _, element := range cmd.Commands() {
 			// element is the element from someSlice for where we are
 			element.Run(cmd, args)
 		}
-		//o := SetUpListeners()
-		//strict, _ := cmd.PersistentFlags().GetBool("strict")
-		//o.Trigger("check-requirements", strict)
-		forceFlag, _ := cmd.PersistentFlags().GetBool("force")
-		createLockFile(cfgFilePath, forceFlag)
 	},
 }
 
@@ -40,6 +38,6 @@ func init() {
 	RootCmd.AddCommand(startCmd)
 
 	startCmd.PersistentFlags().BoolP("force", "f", false, "Force the start command to run even if a lock file exists")
-	startCmd.PersistentFlags().BoolP("strict", "s", true, "Stop running if requirements are not met")
+	//startCmd.PersistentFlags().BoolP("strict", "s", true, "Stop running if requirements are not met")
 
 }

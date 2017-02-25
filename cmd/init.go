@@ -16,6 +16,9 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"os"
+	"fmt"
+	"github.com/spf13/viper"
 )
 
 // initCmd represents the init command
@@ -29,6 +32,19 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
+
+		dir := viper.GetString("data_dir")
+
+		if _, err := os.Stat(dir); os.IsNotExist(err) {
+			//Install stuff if it doesnt exist
+			fmt.Print("		---> Creating data dir: ")
+			fmt.Println(dir)
+			os.Mkdir(dir, 0777)
+		}
+
+		data := GetAsset("dm.yml")
+		WriteAsset(dir+"/dm.yml",data)
+
 		for _, element := range cmd.Commands() {
 			// element is the element from someSlice for where we are
 			element.Run(cmd, args)
