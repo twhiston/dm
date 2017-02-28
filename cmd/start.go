@@ -25,9 +25,18 @@ var startCmd = &cobra.Command{
 	Long:  `Start the local environment by running all of the Extensions`,
 	Run: func(cmd *cobra.Command, args []string) {
 		forceFlag, _ := cmd.PersistentFlags().GetBool("force")
+		blackfireFlag, _ := cmd.PersistentFlags().GetBool("blackfire")
+
 		createLockFile(forceFlag)
 
 		for _, element := range cmd.Commands() {
+			if blackfireFlag && element.Use == "xdebug" {
+				continue
+			}
+			if !blackfireFlag && element.Use == "blackfire" {
+				continue
+			}
+
 			// element is the element from someSlice for where we are
 			element.Run(cmd, args)
 		}
@@ -38,6 +47,7 @@ func init() {
 	RootCmd.AddCommand(startCmd)
 
 	startCmd.PersistentFlags().BoolP("force", "f", false, "Force the start command to run even if a lock file exists")
+	startCmd.PersistentFlags().BoolP("blackfire", "b", false, "Use Blackfire instead of xdebug")
 	//startCmd.PersistentFlags().BoolP("strict", "s", true, "Stop running if requirements are not met")
 
 }

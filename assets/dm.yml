@@ -36,6 +36,19 @@ services:
     networks:
       - bridge
 
+  blackfire:
+    image: blackfire/blackfire
+    container_name: blackfire_local
+    ports:
+      - 8707:8707
+    environment:
+      - BLACKFIRE_SERVER_ID=${BLACKFIRE_SERVER_ID}
+      - BLACKFIRE_SERVER_TOKEN=${BLACKFIRE_SERVER_TOKEN}
+      - BLACKFIRE_CLIENT_ID=${BLACKFIRE_CLIENT_ID}
+      - BLACKFIRE_CLIENT_TOKEN=${BLACKFIRE_CLIENT_TOKEN}
+    networks:
+      - bridge
+
 networks:
     bridge:
       driver: bridge
