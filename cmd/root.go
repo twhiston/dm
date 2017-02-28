@@ -81,11 +81,12 @@ func initConfig() {
 	viper.AddConfigPath(configPath) // adding home directory as first search path
 	viper.AutomaticEnv()            // read in environment variables that match
 
+	viper.Set("version", VERSION)
+
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		//fmt.Println("Using config file:", viper.ConfigFileUsed())
 	} else {
-		viper.Set("version", VERSION)
 		viper.SetDefault("share_dir", userHomeDir())
 		output := RunScript("whoami")
 		viper.SetDefault("whoami", output)
