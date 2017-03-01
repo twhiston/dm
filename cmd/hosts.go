@@ -28,11 +28,7 @@ var hostsCmd = &cobra.Command{
 	Use:   "hosts",
 	Short: "add or remove hosts file entries",
 	Long: `Easily add or remove dev site aliases from your local hosts file here
-
-	This allows you easily manage redirects via the nginx proxy container`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("use `dm hosts --help` for commands")
-	},
+This allows you easily manage redirects via the nginx proxy container`,
 }
 
 var hostsListCmd = &cobra.Command{
