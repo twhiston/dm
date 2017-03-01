@@ -28,7 +28,7 @@ var stopCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		deleteLockFile()
-		fmt.Println("	---> Stopping pxd containers")
+		fmt.Println("	---> Stopping dm containers")
 		RunScript("/bin/sh", "-c", "docker-compose -f "+viper.GetString("data_dir")+"/dm.yml stop")
 		listContainers()
 	},
