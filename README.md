@@ -2,6 +2,7 @@
 Tom Whiston <tom.whiston@gmail.com>
 
 ## Bootstrapper for Docker for Mac
+Dm aims to make developing on docker in OSX a painless experience and to give you lots of tools to get started quickly
 
 ## Requirements
 
@@ -17,17 +18,27 @@ Tom Whiston <tom.whiston@gmail.com>
 
 ## About
 
-- Creates a local dir for data
-    - all nfs, mariadb and other settings and data are kept in one place
-- Sets up NFS shares on your docker for mac machine
-    - Note that you must remove all shares from the docker for mac interface other than /tmp
-- Starts a mariadb container that can be linked in your other applications
-    - uses a path in our local data dir, so that data persists between container builds
-- Starts a selenium-chrome container for behat testing
-- Sets up an xdebug loopback and enables socat for phpstorm docker integration
-- Starts an nginx proxy that allows you to have hostnames for your docker sites
+Dm tries to make it easier to do docker development on your mac. This means:
+- Giving you a useful stack of docker images to get started with
+    - mariadb
+    - selenium
+    - nginx-proxy
+    - blackfire
+- Giving you a network for connection to them
+    - dm_bridge
+- Giving you nfs file sharing for better performance
+    - Sets up base nfs shares as needed
+    - Makes ~/ a docker volume so you can easily bind project files to containers
+- Giving you an easy way to use hostnames with your containers
+    - add env var VIRTUAL_HOST to your docker compose
+    - run `dm hosts add myhostname.dev`
+- Lots more
+    - run `dm` to see all the base commands
+    - run `dm {command_name} -h` to see all available subcommands and help
 
-For example a simple drupal 8 development environment docker-compose.yml could be
+## Examples
+
+A simple drupal 8 development environment docker-compose.yml could be
 ```
 app:
   # This is based on our generic drupal s2i image, which is used for Openshift builds
@@ -44,7 +55,7 @@ app:
 
 ## Networks
 
-pxd will expose a network called 'dm_bridge' that can be used to connect to the mariadb instance
+dm will expose a network called 'dm_bridge' that can be used to connect to container instances
 
 for example
 
@@ -62,8 +73,6 @@ services:
     # This allows nginx in the container to serve the correct files.
     # ./ must be under the current users home folder
       - ./:/opt/app-root/src
-    ports:
-      - 8000:8000
     networks:
       - dm_bridge
     environment:
@@ -78,6 +87,9 @@ networks:
     external: true
  ```
 
+Note that you DO NOT need to expose your ports in your docker compose file, as the nginx will detect the port you expose in the container
+If the container exposes multiple ports you will need to use the environment variable VIRTUAL_PORT.
+For more information about configuring your containers with the proxy please see: https://github.com/jwilder/nginx-proxy
 
 ## Assets
 
@@ -85,7 +97,12 @@ To add assets to the project get the go-bindata library
 `go get -u github.com/jteeuwen/go-bindata/...`
 then run
 `go-bindata -o cmd/resources.go assets/...`
-this will generate the asset output for the binary. You can then `go install` or `go build` to get your app + assets
+
+This will generate the asset output for the binary. You can then `go install` or `go build` to get your app + assets.
+
+#### Note:
+Unfortunately this currently makes a file in the namespace `main` so you will need to manually change this to cmd. This may be changed in future
+
 
 
 
