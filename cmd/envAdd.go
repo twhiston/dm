@@ -28,9 +28,9 @@ var setenvCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// read the whole file at once
 		envFile, envFileString := getenvFile()
-		envVarName, _ := envCmd.PersistentFlags().GetString("variable")
+		envVarName, _ := envCmd.PersistentFlags().GetString("env-var")
 		if envVarName == "" {
-			fmt.Println("--variable cannot be blank")
+			fmt.Println("--env-var cannot be blank")
 			return
 		}
 

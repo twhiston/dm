@@ -18,6 +18,7 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -35,17 +36,43 @@ var envCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(envCmd)
 
-	envCmd.PersistentFlags().String("variable", "", "The ENV variable name to add")
-	envCmd.PersistentFlags().String("file", ".bash_profile", "Name of the user profile file")
+	envCmd.PersistentFlags().String("env-var", "", "The ENV variable name to add")
+	envCmd.PersistentFlags().String("file", "", "Name of the user profile file")
 	envCmd.PersistentFlags().String("value", "", "The ENV variable value to add")
+}
 
+func openConfigFile() {
+	cfgpath := getConfigPath() + "/" + getConfigFileName()
+	viper.AddConfigPath(cfgpath)
+	err := viper.ReadInConfig()
+	if err != nil {
+	    panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
+}
+
+func saveUseProfileFile(envFile string) {
+	viper.Set("envfile", envFile)
+	saveConfig()
+	fmt.Println("")
+	fmt.Println("	---> User profile file update")
+	fmt.Println("		---> Your preferred user profile file has been updated to `" + envFile + "`")
+	fmt.Println("		---> Your choice has been saved for later usage")
+	fmt.Println("")
 }
 
 func getenvFile() (string, string) {
+	openConfigFile()
 	envFile, err := envCmd.PersistentFlags().GetString("file")
-	if envFile == ".bash_profile" {
-		envFile = userHomeDir() + "/" + envFile
+	if envFile == "" {
+		envFile = viper.GetString("envfile")
+		if envFile == "" {
+			envFile = userHomeDir() + "/.bash_profile"
+			saveUseProfileFile(envFile)
+		}
+	} else if envFile != viper.GetString("envfile") {
+		saveUseProfileFile(envFile)
 	}
+
 	envFileData, err := ioutil.ReadFile(envFile)
 	if err != nil {
 		fmt.Println("Failed to open user profile file. You may need to run with sudo")
