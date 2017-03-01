@@ -41,15 +41,6 @@ func init() {
 	envCmd.PersistentFlags().String("value", "", "The ENV variable value to add")
 }
 
-func openConfigFile() {
-	cfgpath := getConfigPath() + "/" + getConfigFileName()
-	viper.AddConfigPath(cfgpath)
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
-	}
-}
-
 func saveUseProfileFile(envFile string) {
 	viper.Set("envfile", envFile)
 	saveConfig()
@@ -61,7 +52,6 @@ func saveUseProfileFile(envFile string) {
 }
 
 func getenvFile() (string, string) {
-	openConfigFile()
 	envFile, err := envCmd.PersistentFlags().GetString("file")
 	if envFile == "" {
 		envFile = viper.GetString("envfile")

@@ -18,8 +18,8 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
-	"regexp"
 	"io/ioutil"
+	"regexp"
 )
 
 // envAddCmd represents the add command
@@ -42,10 +42,10 @@ var rmEnvCmd = &cobra.Command{
 		}
 
 		//Remove env var
-		re := regexp.MustCompile("(?m)[\r\n]+^export "+envVarName+"=.*$")
+		re := regexp.MustCompile("(?m)[\r\n]+^export " + envVarName + "=.*$")
 		res := re.ReplaceAllString(envFileString, "")
 
-		err := ioutil.WriteFile(envFile,[]byte(res), 0644)
+		err := ioutil.WriteFile(envFile, []byte(res), 0644)
 		if err != nil {
 			panic(err)
 		}
