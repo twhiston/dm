@@ -112,7 +112,7 @@ var blackfireReqCmd = &cobra.Command{
 	Short: "Test if environment is correctly set for Blackfire",
 	Long: `Will check if your environment variables contains BLACKFIRE_SERVER_ID`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		if os.Getenv("BLACKFIRE_SERVER_IDA") == "" {
+		if os.Getenv("BLACKFIRE_SERVER_ID") == "" || os.Getenv("BLACKFIRE_SERVER_TOKEN") == "" {
 			return errors.New(`		/!\\ ERROR /!\\
 		It seems that your environment is not set properly
 		First, make sure you are not using this command with 'sudo'.
