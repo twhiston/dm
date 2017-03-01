@@ -48,6 +48,7 @@ func init() {
 	checkCmd.AddCommand(dockerReqCmd)
 	checkCmd.AddCommand(socatReqCmd)
 	checkCmd.AddCommand(apacheReqCmd)
+	checkCmd.AddCommand(blackfireReqCmd)
 
 	RootCmd.AddCommand(checkCmd)
 
@@ -101,6 +102,33 @@ var apacheReqCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := exec.Command("apachectl", "stop").Run(); err != nil {
 			return errors.New("	---> Could not stop apache, try again with\n sudo dm check")
+		}
+		return nil
+	},
+}
+
+var blackfireReqCmd = &cobra.Command{
+	Use:   "blackfire",
+	Short: "Test if environment is correctly set for Blackfire",
+	Long:  `Will check if your environment variables contains BLACKFIRE_SERVER_ID`,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		if os.Getenv("BLACKFIRE_SERVER_ID") == "" || os.Getenv("BLACKFIRE_SERVER_TOKEN") == "" {
+			return errors.New(`		/!\\ ERROR /!\\
+		It seems that your environment is not set properly
+		First, make sure you are not using this command with 'sudo'.
+		To fix this issue, run the following commands:
+
+		dm env add --variable=BLACKFIRE_SERVER_ID --value=<YOUR_SERVER_ID>
+		dm env add --variable=BLACKFIRE_SERVER_TOKEN --value=<YOUR_SERVER_TOKEN>
+		dm env add --variable=BLACKFIRE_CLIENT_ID --value=<YOUR_CLIENT_ID>
+		dm env add --variable=BLACKFIRE_CLIENT_TOKEN --value=<YOUR_CLIENT_TOKEN>
+
+		And then log back in
+
+		Note:
+			if you want to store your environment variables in a different file than '.bash_profile'
+			you can add the following flag to the commands above:
+			--file=<FULL_PATH_OF_YOUR_PREFERRED_FILE>`)
 		}
 		return nil
 	},
