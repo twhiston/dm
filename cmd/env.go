@@ -30,9 +30,6 @@ var envCmd = &cobra.Command{
 	Long: `Easily add or remove environement variables
 
 	This allows you to easily configure Blackfire environment`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("use `dm env --help` for commands")
-	},
 }
 
 func init() {
