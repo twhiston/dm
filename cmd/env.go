@@ -46,7 +46,7 @@ func openConfigFile() {
 	viper.AddConfigPath(cfgpath)
 	err := viper.ReadInConfig()
 	if err != nil {
-	    panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
 	}
 }
 
@@ -83,7 +83,7 @@ func getenvFile() (string, string) {
 
 func envExists(envVarName string, envFileString string) bool {
 	//check if env variable exists
-	return strings.Contains(envFileString, "export " + envVarName + "=")
+	return strings.Contains(envFileString, "export "+envVarName+"=")
 }
 
 func getenvstring(envVarName string, envVarValue string) string {

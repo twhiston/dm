@@ -17,7 +17,6 @@ package cmd
 import (
 	"fmt"
 
-
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +24,7 @@ import (
 var startBlackfireCmd = &cobra.Command{
 	Use:   "blackfire",
 	Short: "Checks if environment is correctly set for Blackfire",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("	---> Blackfire recommendations")
 		fmt.Println("	---> If you plan to use Blackfire, make sure that:")
