@@ -15,6 +15,9 @@ Dm aims to make developing on docker in OSX a painless experience and to give yo
 2. `chmod +x dm`
 3. Add the binary to your path
 4. Change the settings on your docker for mac machine so that only `/tmp` is shared
+5. run `dm check` to check your system is set up correctly
+6. run `dm init` to initialize your system and create all necessary directories and assets
+7. run `dm start` to bring up the dm container stack
 
 ## About
 
