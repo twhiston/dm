@@ -112,6 +112,10 @@ var blackfireReqCmd = &cobra.Command{
 	Short: "Test if environment is correctly set for Blackfire",
 	Long:  `Will check if your environment variables contains BLACKFIRE_SERVER_ID`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		fmt.Println("---> Blackfire recommendations")
+		fmt.Println("---> If you plan to use Blackfire, make sure that:")
+		fmt.Println("	- Xdebug is not activated in your application container")
+		fmt.Println("	- Blackfire Probe is installed in your application container")
 		if os.Getenv("BLACKFIRE_SERVER_ID") == "" || os.Getenv("BLACKFIRE_SERVER_TOKEN") == "" {
 			return errors.New(`		/!\\ ERROR /!\\
 		It seems that your environment is not set properly
