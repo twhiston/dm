@@ -35,7 +35,7 @@ func createLockFile(forceFlag bool) {
 			os.Exit(1)
 		}
 	} else {
-		fmt.Println("	Cannot start, lock file already exists, run stop first or use -f --force flag")
+		fmt.Println("Cannot start, lock file already exists, run stop first or use -f --force flag")
 		os.Exit(1)
 	}
 }

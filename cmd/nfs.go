@@ -32,19 +32,19 @@ var startNfsCmd = &cobra.Command{
 	Long: `This command alters your /etc/exports file if necessary with your nfs sharing configuration
 	It has a wait period at the end as it was found that without it sometimes launching containers would fail`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("	---> Start NFS shares")
+		fmt.Println("---> Start NFS shares")
 
 		if !viper.GetBool("init.nfs") {
-			fmt.Println("		---> Nfs not initialized, run init first")
+			fmt.Println("---> Nfs not initialized, run init first")
 			os.Exit(1)
 		}
 		//Run the command
 		nfsDir := viper.GetString("data_dir") + "/nfs"
 		RunScript(nfsDir + "/d4m-nfs.sh")
 		//fmt.Print(output)
-		fmt.Println("		---> Wait for NFS")
+		fmt.Println("---> Wait for NFS")
 		time.Sleep(10000 * time.Millisecond)
-		fmt.Println("	---> NFS started <---")
+		fmt.Println("---> NFS started <---")
 	},
 }
 
@@ -55,12 +55,12 @@ var initNfsCmd = &cobra.Command{
 		https://github.com/IFSight/d4m-nfs
 	and then configures a mounts file based on the current user and the configured directories`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("	---> Setup NFS shares")
+		fmt.Println("---> Setup NFS shares")
 		nfsDir := viper.GetString("data_dir") + "/nfs"
 		fmt.Println("		" + nfsDir)
 		//if _, err := os.Stat(nfsDir); os.IsNotExist(err) {
 		//If the directory doesn't exist then make it and clone the helper repo we are using
-		fmt.Println("	---> Creating nfs mount script dir ")
+		fmt.Println("---> Creating nfs mount script dir ")
 		HandleError(os.Mkdir(nfsDir, 0777), true)
 		_, err := git.Clone("https://github.com/IFSight/d4m-nfs", nfsDir, &git.CloneOptions{})
 		HandleError(err, false)
@@ -69,7 +69,7 @@ var initNfsCmd = &cobra.Command{
 		data := GetAsset("nfs/d4m-nfs-mounts.txt")
 		s := string(data[:])
 		//add custom shares
-		fmt.Println("	---> Adding Custom Shares ")
+		fmt.Println("---> Adding Custom Shares ")
 		s += viper.GetString("data_dir") + ":" + viper.GetString("data_dir") + ":0:0 \n"
 		s += viper.GetString("share_dir") + ":" + viper.GetString("share_dir") + ":"
 		uid := strings.Trim(viper.GetString("uid"), "\r\n")
@@ -78,7 +78,7 @@ var initNfsCmd = &cobra.Command{
 		data = []byte(s)
 		WriteAsset(nfsDir+"/etc/d4m-nfs-mounts.txt", data)
 		viper.Set("init.nfs", true)
-		fmt.Println("	---> nfs initialized <---")
+		fmt.Println("---> nfs initialized <---")
 	},
 }
 

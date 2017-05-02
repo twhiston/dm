@@ -28,7 +28,7 @@ var containersCmd = &cobra.Command{
 	Long:  `The weird command name ensure that this gets sorted last in the child commands :(`,
 	Run: func(cmd *cobra.Command, args []string) {
 		//docker compose up
-		fmt.Println("	---> Starting dm containers")
+		fmt.Println("---> Starting dm containers")
 		RunScript("/bin/sh", "-c", "docker-compose -f "+viper.GetString("data_dir")+"/dm.yml up -d")
 		listContainers()
 	},

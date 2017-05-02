@@ -28,9 +28,7 @@ import (
 var envCmd = &cobra.Command{
 	Use:   "env",
 	Short: "add or remove env variables",
-	Long: `Easily add or remove environement variables
-
-	This allows you to easily configure Blackfire environment`,
+	Long:  `Easily add or remove environment variables`,
 }
 
 func init() {
@@ -44,11 +42,9 @@ func init() {
 func saveUseProfileFile(envFile string) {
 	viper.Set("envfile", envFile)
 	saveConfig()
-	fmt.Println("")
-	fmt.Println("	---> User profile file update")
-	fmt.Println("		---> Your preferred user profile file has been updated to `" + envFile + "`")
-	fmt.Println("		---> Your choice has been saved for later usage")
-	fmt.Println("")
+	fmt.Println('\n', "---> User profile file update")
+	fmt.Println("---> Your preferred user profile file has been updated to `" + envFile + "`")
+	fmt.Println("---> Your choice has been saved for later usage", '\n')
 }
 
 func getenvFile() (string, string) {

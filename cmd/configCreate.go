@@ -50,7 +50,6 @@ func saveConfig() {
 	if err != nil {
 		panic(err)
 	}
-	//fmt.Println("Created config file: " + cfgpath)
 
 	defer f.Close()
 

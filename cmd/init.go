@@ -37,7 +37,7 @@ to quickly create a Cobra application.`,
 
 		if _, err := os.Stat(dir); os.IsNotExist(err) {
 			//Install stuff if it doesnt exist
-			fmt.Print("		---> Creating data dir: ")
+			fmt.Print("---> Creating data dir: ")
 			fmt.Println(dir)
 			os.Mkdir(dir, 0777)
 		}

@@ -38,7 +38,7 @@ func init() {
 }
 
 func listContainers() {
-	fmt.Println("	---> Listing Running Docker Containers")
+	fmt.Println("---> Listing Running Docker Containers")
 	cmd := exec.Command("docker", "ps")
 	var out bytes.Buffer
 	cmd.Stdout = &out
