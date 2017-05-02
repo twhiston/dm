@@ -107,5 +107,22 @@ This will generate the asset output for the binary. You can then `go install` or
 Unfortunately this currently makes a file in the namespace `main` so you will need to manually change this to cmd. This may be changed in future
 
 
+## Common Issues
 
+### Shared Folders
 
+Currently all the maria data, nfs share data and stack files are stored in /Users/Shared/.dm because of the way that nfs shares work.
+Because we dont want to force the site hosting folders to be in a specific we share the whole current user directory.
+This means that we need to store the database data (which requires a different set of permissions) outside of the current user dir.
+This means that it is not really suitable for use on a shared environment. But by adding some complexity to the init config this could be solved.
+If you want to work out an elegant fix for this drop me a line.
+
+### Mariadb
+
+If the mariadb data folder has some issues around permissions and crashes when accessed you should `sudo chmod -R 777 /Users/Shared/.dm/maria/data`
+It is also possible that it gets into a crash loop if it crashes a few times. In this case you should delete `/Users/Shared/.dm/maria/data/tc.log` and restart dm
+
+### PHPStorm and container connections
+
+If you are running PHPUnit or similar from phpstorm you need the container to be on the dm_bridge network to access any shared resources.
+To do this make sure that the (confusingly named) "network mode" field in the docker container settings is set to `dm_bridge`
