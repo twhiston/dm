@@ -36,5 +36,5 @@ var startBlackfireCmd = &cobra.Command{
 }
 
 func init() {
-	startCmd.AddCommand(startBlackfireCmd)
+	checkCmd.AddCommand(startBlackfireCmd)
 }
