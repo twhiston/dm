@@ -22,8 +22,8 @@ import (
 )
 
 // containersCmd represents the containers command
-var containersCmd = &cobra.Command{
-	Use:   "z_containers",
+var stackCmd = &cobra.Command{
+	Use:   "z_stack",
 	Short: "start the containers only",
 	Long:  `The weird command name ensure that this gets sorted last in the child commands :(`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -35,16 +35,5 @@ var containersCmd = &cobra.Command{
 }
 
 func init() {
-	startCmd.AddCommand(containersCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// containersCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// containersCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
+	startCmd.AddCommand(stackCmd)
 }

@@ -21,6 +21,7 @@ import (
 	"bytes"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"io"
 	"os/exec"
 )
 
@@ -28,7 +29,8 @@ var cfgFilePath string
 
 var (
 	// VERSION is set during build
-	VERSION string
+	VERSION       string
+	STACK_VERSION string
 )
 
 // RootCmd represents the base command when called without any subcommands
@@ -49,8 +51,9 @@ var RootCmd = &cobra.Command{
 
 // Execute adds all child commands to the root command sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute(version string) {
+func Execute(version string, stackVersion string) {
 	VERSION = version
+	STACK_VERSION = stackVersion
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -85,7 +88,7 @@ func initConfig() {
 
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
-		//fmt.Println("Using config file:", viper.ConfigFileUsed())
+		fmt.Println("Using config file:", viper.ConfigFileUsed())
 	} else {
 		viper.SetDefault("share_dir", userHomeDir())
 		output := RunScript("whoami")
@@ -97,6 +100,98 @@ func initConfig() {
 		viper.SetDefault("data_dir", "/Users/Shared/.dm")
 		saveConfig()
 	}
+
+	// This is annoyingly a special case at the moment, really this should not be restricted to stack
+	// but should be generic so any command can have an upgrade path for it's assets
+	if viper.GetString("stack_version") != STACK_VERSION {
+
+		fmt.Println("\nstack version in dm has changed, your dm stack file will be updated")
+		fmt.Println("old stack version:", viper.GetString("stack_version"))
+		fmt.Println("new stack version:", STACK_VERSION, "\n")
+
+		//make a backup of the existing stack, so user could merge back in changes later
+		dir := viper.GetString("data_dir")
+		backupName := dir + "/dm." + viper.GetString("stack_version") + ".yml.bck"
+
+		fmt.Println("your current stack file will be backed up to", backupName)
+
+		err := copyFile(dir+"/dm.yml", backupName)
+		if err != nil {
+			fmt.Println("Could not back up stack", err.Error())
+			return
+		}
+
+		//Upgrade the stack file with the new stack
+		data := GetAsset("dm.yml")
+		WriteAsset(dir+"/dm.yml", data)
+		viper.Set("stack_version", STACK_VERSION)
+		saveConfig()
+		//noinspection GoPlaceholderCount
+		fmt.Println(`If dm is currently running you should run "dm stop",
+copy any custom stack elements from the file backup to the new stack file
+and then run "dm start" to bring up the new stack`, "\n")
+	}
+
+}
+
+// CopyFile copies a file from src to dst. If src and dst files exist, and are
+// the same, then return success. Otherise, attempt to create a hard link
+// between the two files. If that fail, copy the file contents from src to dst.
+func copyFile(src, dst string) (err error) {
+	sfi, err := os.Stat(src)
+	if err != nil {
+		return
+	}
+	if !sfi.Mode().IsRegular() {
+		// cannot copy non-regular files (e.g., directories,
+		// symlinks, devices, etc.)
+		return fmt.Errorf("CopyFile: non-regular source file %s (%q)", sfi.Name(), sfi.Mode().String())
+	}
+	dfi, err := os.Stat(dst)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return
+		}
+	} else {
+		if !(dfi.Mode().IsRegular()) {
+			return fmt.Errorf("CopyFile: non-regular destination file %s (%q)", dfi.Name(), dfi.Mode().String())
+		}
+		if os.SameFile(sfi, dfi) {
+			return
+		}
+	}
+	if err = os.Link(src, dst); err == nil {
+		return
+	}
+	err = copyFileContents(src, dst)
+	return
+}
+
+// copyFileContents copies the contents of the file named src to the file named
+// by dst. The file will be created if it does not already exist. If the
+// destination file exists, all it's contents will be replaced by the contents
+// of the source file.
+func copyFileContents(src, dst string) (err error) {
+	in, err := os.Open(src)
+	if err != nil {
+		return
+	}
+	defer in.Close()
+	out, err := os.Create(dst)
+	if err != nil {
+		return
+	}
+	defer func() {
+		cerr := out.Close()
+		if err == nil {
+			err = cerr
+		}
+	}()
+	if _, err = io.Copy(out, in); err != nil {
+		return
+	}
+	err = out.Sync()
+	return
 }
 
 func RunScript(name string, args ...string) string {
