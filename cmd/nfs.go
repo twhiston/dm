@@ -20,6 +20,7 @@ import (
 	"github.com/libgit2/git2go"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"io/ioutil"
 	"os"
 	"strings"
 	"time"
@@ -82,7 +83,31 @@ var initNfsCmd = &cobra.Command{
 	},
 }
 
+// startNfsCmd represents the startNfs command
+var cleanNfsCmd = &cobra.Command{
+	Use:   "nfs",
+	Short: "clean nfs sharing in docker machine",
+	Long:  `makes your /etc/exports file blank, if this command fails run it with sudo`,
+	Run: func(cmd *cobra.Command, args []string) {
+
+		exportFile, err := cmd.PersistentFlags().GetString("exports-path")
+		fmt.Println("---> Make ", exportFile, " file empty")
+
+		res := ""
+
+		err = ioutil.WriteFile(exportFile, []byte(res), 0644)
+		if err != nil {
+			fmt.Println("Failed to open exports file. You may need to run with sudo")
+			os.Exit(1)
+		}
+
+	},
+}
+
 func init() {
 	startCmd.AddCommand(startNfsCmd)
 	initCmd.AddCommand(initNfsCmd)
+	cleanCmd.AddCommand(cleanNfsCmd)
+
+	cleanNfsCmd.PersistentFlags().String("exports-path", "/etc/exports", "full path of file to wipe")
 }
