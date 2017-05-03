@@ -17,9 +17,9 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/libgit2/git2go"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"gopkg.in/src-d/go-git.v4"
 	"io/ioutil"
 	"os"
 	"strings"
@@ -58,12 +58,15 @@ var initNfsCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("---> Setup NFS shares")
 		nfsDir := viper.GetString("data_dir") + "/nfs"
-		fmt.Println("		" + nfsDir)
+		fmt.Println(nfsDir)
 		//if _, err := os.Stat(nfsDir); os.IsNotExist(err) {
 		//If the directory doesn't exist then make it and clone the helper repo we are using
 		fmt.Println("---> Creating nfs mount script dir ")
 		HandleError(os.Mkdir(nfsDir, 0777), true)
-		_, err := git.Clone("https://github.com/IFSight/d4m-nfs", nfsDir, &git.CloneOptions{})
+		_, err := git.PlainClone(nfsDir, false, &git.CloneOptions{
+			URL:      "https://github.com/IFSight/d4m-nfs",
+			Progress: os.Stdout,
+		})
 		HandleError(err, false)
 		//Get the data from the config file
 		//Turn it into a text file and write it to the /etc/folder
