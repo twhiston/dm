@@ -93,12 +93,12 @@ var cleanNfsCmd = &cobra.Command{
 	Long:  `makes your /etc/exports file blank, if this command fails run it with sudo`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		exportFile, err := cmd.PersistentFlags().GetString("exports-path")
+		exportFile, _ := cmd.PersistentFlags().GetString("exports-path")
 		fmt.Println("---> Make ", exportFile, " file empty")
 
 		res := ""
 
-		err = ioutil.WriteFile(exportFile, []byte(res), 0644)
+		err := ioutil.WriteFile(exportFile, []byte(res), 0644)
 		if err != nil {
 			fmt.Println("Failed to open exports file. You may need to run with sudo")
 			os.Exit(1)

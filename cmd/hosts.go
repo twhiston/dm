@@ -66,14 +66,11 @@ func appendStringToFile(path, text string) error {
 	defer f.Close()
 
 	_, err = f.WriteString(text)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
 func getHostsFile() (string, string) {
-	hostFile, err := hostsCmd.PersistentFlags().GetString("file")
+	hostFile, _ := hostsCmd.PersistentFlags().GetString("file")
 	hostFileData, err := ioutil.ReadFile(hostFile)
 	if err != nil {
 		fmt.Println("Failed to open hosts file. You may need to run with sudo")

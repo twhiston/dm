@@ -38,7 +38,7 @@ func init() {
 func saveConfig() {
 
 	configPath := getConfigPath()
-	configPath = createConfigDir(configPath)
+	createConfigDir(configPath)
 
 	cfgpath := getConfigPath() + "/" + getConfigFileName()
 	b, err := yaml.Marshal(viper.AllSettings())

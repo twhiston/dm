@@ -27,7 +27,7 @@ func getLockFileAbsolutePath() string {
 func createLockFile(forceFlag bool) {
 	lockFile := getLockFileAbsolutePath()
 
-	if _, err := os.Stat(lockFile); os.IsNotExist(err) || forceFlag == true {
+	if _, err := os.Stat(lockFile); os.IsNotExist(err) || forceFlag {
 
 		err := ioutil.WriteFile(lockFile, []byte("lock"), 0644)
 		if err != nil {

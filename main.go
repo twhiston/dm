@@ -19,12 +19,12 @@ import (
 )
 
 var (
-	// VERSION is set during build
-	VERSION       = "0.2.1-beta2"
+	//VERSION - Current application version
+	VERSION = "0.2.1-beta3"
+	//STACK_VERSION - Current stack file version
 	STACK_VERSION = "1.1"
 )
 
 func main() {
 	cmd.Execute(VERSION, STACK_VERSION)
-
 }

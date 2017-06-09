@@ -28,8 +28,9 @@ import (
 var cfgFilePath string
 
 var (
-	// VERSION is set during build
-	VERSION       string
+	// VERSION - The current version number, set from the main.go file
+	VERSION string
+	// STACK_VERSION - The version of the current stack file
 	STACK_VERSION string
 )
 
@@ -64,10 +65,6 @@ func init() {
 
 	cobra.OnInitialize(initConfig)
 	RootCmd.PersistentFlags().StringVar(&cfgFilePath, "config", "~/.dm/config.yml", "config file")
-}
-
-type defaultPaths struct {
-	paths []string `yaml:",flow"`
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -107,7 +104,8 @@ func initConfig() {
 
 		fmt.Println("\nstack version in dm has changed, your dm stack file will be updated")
 		fmt.Println("old stack version:", viper.GetString("stack_version"))
-		fmt.Println("new stack version:", STACK_VERSION, "\n")
+		fmt.Println("new stack version:", STACK_VERSION)
+		fmt.Println()
 
 		//make a backup of the existing stack, so user could merge back in changes later
 		dir := viper.GetString("data_dir")
@@ -129,7 +127,8 @@ func initConfig() {
 		//noinspection GoPlaceholderCount
 		fmt.Println(`If dm is currently running you should run "dm stop",
 copy any custom stack elements from the file backup to the new stack file
-and then run "dm start" to bring up the new stack`, "\n")
+and then run "dm start" to bring up the new stack`)
+		fmt.Println()
 	}
 
 }
@@ -194,6 +193,8 @@ func copyFileContents(src, dst string) (err error) {
 	return
 }
 
+//RunScript runs a script by name, passing in args.
+//This will either fail and exit completely or will return output
 func RunScript(name string, args ...string) string {
 	cmd := exec.Command(name, args...)
 	var out, stderr bytes.Buffer
@@ -209,8 +210,9 @@ func RunScript(name string, args ...string) string {
 	return output
 }
 
-//Print out an error and then die
-//Standard error functionality
+//TODO - REPLACE ERRORS WITH HANDLEERROR
+
+//HandleError prints to stderror and then exists the program if not soft
 func HandleError(err error, soft bool) {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

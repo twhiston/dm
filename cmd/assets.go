@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+//GetAsset takes a named asset and loads it or fails and exists
 func GetAsset(name string) []byte {
 	data, err := Asset("assets/" + name)
 	if err != nil {
@@ -15,9 +16,10 @@ func GetAsset(name string) []byte {
 	return data
 }
 
+//WriteAsset writes a byte array to a location
 func WriteAsset(location string, asset []byte) {
 
-	err := ioutil.WriteFile(location, []byte(asset), 0644)
+	err := ioutil.WriteFile(location, asset, 0644)
 	if err != nil {
 		fmt.Println("Could not write file: " + location)
 		os.Exit(1)
