@@ -20,7 +20,7 @@ import (
 
 var (
 	// VERSION is set during build
-	VERSION       = "0.2.1-beta2"
+	VERSION       = "0.2.2-beta1"
 	STACK_VERSION = "1.1"
 )
 
