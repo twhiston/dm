@@ -72,6 +72,7 @@ func doWatch(loc string, cmd string) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
+		return
 	}
 	defer watcher.Close()
 
