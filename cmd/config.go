@@ -22,7 +22,6 @@ import (
 	"strings"
 )
 
-var configRst bool
 var configCreate bool
 
 // configCmd represents the config command

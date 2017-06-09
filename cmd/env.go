@@ -48,7 +48,7 @@ func saveUseProfileFile(envFile string) {
 }
 
 func getenvFile() (string, string) {
-	envFile, err := envCmd.PersistentFlags().GetString("file")
+	envFile, _ := envCmd.PersistentFlags().GetString("file")
 	if envFile == "" {
 		envFile = viper.GetString("envfile")
 		if envFile == "" {
