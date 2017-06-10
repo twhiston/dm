@@ -38,7 +38,6 @@ func init() {
 	RootCmd.AddCommand(startCmd)
 
 	startCmd.PersistentFlags().BoolP("force", "f", false, "Force the start command to run even if a lock file exists")
-	startCmd.PersistentFlags().BoolP("blackfire", "b", false, "Ensure user's environment is correctly setup for Blackfire")
 	//startCmd.PersistentFlags().BoolP("strict", "s", true, "Stop running if requirements are not met")
 
 }
