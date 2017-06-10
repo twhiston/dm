@@ -15,9 +15,11 @@
 package cmd
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/cobra"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -43,31 +45,57 @@ Uses https://github.com/fsnotify/fsnotify under the hood for watching, so see th
 
 		loc, _ := cmd.PersistentFlags().GetString("location")
 		rcmd, _ := cmd.PersistentFlags().GetString("command")
+		rec, _ := cmd.PersistentFlags().GetBool("recursive")
+		watchfile, _ := cmd.PersistentFlags().GetString("watchfile")
 
-		if (loc == "" && rcmd != "") || (loc != "" && rcmd == "") {
+		//If the location is set then command must also be set
+		if loc != "" && rcmd == "" {
 			//incorrect input
 			fmt.Println("If you set location you must also set command")
 			return
 		}
 
-		if loc != "" && rcmd != "" {
-			//In this case we just do a single watch
-			doWatch(loc, rcmd)
+		//If command is set but location isn't we assume the location to be the cwd
+		if loc == "" && rcmd != "" {
+			//get cwd
+			loc, err := os.Getwd()
+			if err != nil {
+				fmt.Println(err.Error())
+				return
+			}
+			doWatch(loc, rcmd, rec)
 			return
 		}
 
-		//if watchfile is set run with that
+		//If both location and command are set then we run it
+		if loc != "" && rcmd != "" {
+			//In this case we just do a single watch
+			doWatch(loc, rcmd, rec)
+			return
+		}
 
-		//if not look in current folder for file and run with that
+		//if watchfile is set load and run with that
+		if watchfile != "" {
+			file, e := ioutil.ReadFile(watchfile)
+			if e != nil {
+				fmt.Printf("File error: %v\n", e)
+				os.Exit(1)
+			}
 
-		//if still nothing return
+			var wl WatchList
+			json.Unmarshal(file, &wl)
+			fmt.Printf("Results: %v\n", wl)
+
+		}
+
+		//if not look in current folder for watchfile and run with that
 
 	},
 }
 
 // Needs to ignore ___jb_tmp___ files
 // Would be cool to have a real ignore functionality
-func doWatch(loc string, cmd string) {
+func doWatch(loc string, cmd string, recursive bool) {
 
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
@@ -101,8 +129,11 @@ func doWatch(loc string, cmd string) {
 		}
 	}()
 
-	//err = watcher.Add(loc)
-	watchRecursive(loc, false, watcher)
+	if recursive {
+		err = watchRecursive(loc, false, watcher)
+	} else {
+		err = watcher.Add(loc)
+	}
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -136,16 +167,8 @@ func watchRecursive(path string, unWatch bool, watcher *fsnotify.Watcher) error 
 func init() {
 	RootCmd.AddCommand(watchCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	watchCmd.PersistentFlags().String("watchfile", "", "An optional watchfile including path")
 	watchCmd.PersistentFlags().String("location", "", "Location is a pattern to watch, will override a local or specified watchfile. If set command must also be specified")
 	watchCmd.PersistentFlags().String("command", "", "A single command to run when changes are detected in location, will override a local or specified watchfile. If set location must also be specified")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// watchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	watchCmd.PersistentFlags().Bool("recursive", true, "If true then watches directory recursively, only applies when location/command options are set")
 
 }
