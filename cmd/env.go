@@ -41,7 +41,7 @@ func init() {
 
 func saveUseProfileFile(envFile string) {
 	viper.Set("envfile", envFile)
-	saveConfig()
+	saveConfig(viper.AllSettings(), getConfigPath()+"/"+getConfigFileName())
 	fmt.Println('\n', "---> User profile file update")
 	fmt.Println("---> Your preferred user profile file has been updated to `" + envFile + "`")
 	fmt.Println("---> Your choice has been saved for later usage", '\n')

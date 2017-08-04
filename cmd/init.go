@@ -49,7 +49,7 @@ to quickly create a Cobra application.`,
 			// element is the element from someSlice for where we are
 			element.Run(cmd, args)
 		}
-		saveConfig()
+		saveConfig(viper.AllSettings(), getConfigPath()+"/"+getConfigFileName())
 	},
 }
 

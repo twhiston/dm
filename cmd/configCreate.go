@@ -27,7 +27,7 @@ var configCreateCmd = &cobra.Command{
 	Short: "Create a basic config file",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
-		saveConfig()
+		saveConfig(viper.AllSettings(), getConfigPath()+"/"+getConfigFileName())
 	},
 }
 
@@ -35,13 +35,12 @@ func init() {
 	configCmd.AddCommand(configCreateCmd)
 }
 
-func saveConfig() {
+func saveConfig(settings map[string]interface{}, cfgpath string) {
 
 	configPath := getConfigPath()
 	createConfigDir(configPath)
 
-	cfgpath := getConfigPath() + "/" + getConfigFileName()
-	b, err := yaml.Marshal(viper.AllSettings())
+	b, err := yaml.Marshal(settings)
 	if err != nil {
 		panic(err)
 	}

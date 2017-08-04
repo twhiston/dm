@@ -1,0 +1,12 @@
+version: "2"
+services:
+  redis:
+    image: redis
+    container_name: redis
+    environment:
+      - VIRTUAL_HOST: "redis.dev"
+  crongle:
+    image: stevebrule/for_your_health
+    container_name: dingus
+    environment:
+      - VIRTUAL_HOST: "dingus.dev"

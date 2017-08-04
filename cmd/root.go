@@ -95,7 +95,7 @@ func initConfig() {
 		group := RunScript("id", "-g")
 		viper.SetDefault("group", group)
 		viper.SetDefault("data_dir", "/Users/Shared/.dm")
-		saveConfig()
+		saveConfig(viper.AllSettings(), getConfigPath()+"/"+getConfigFileName())
 	}
 
 	// This is annoyingly a special case at the moment, really this should not be restricted to stack
@@ -123,7 +123,7 @@ func initConfig() {
 		data := GetAsset("dm.yml")
 		WriteAsset(dir+"/dm.yml", data)
 		viper.Set("stack_version", STACK_VERSION)
-		saveConfig()
+		saveConfig(viper.AllSettings(), getConfigPath()+"/"+getConfigFileName())
 		//noinspection GoPlaceholderCount
 		fmt.Println(`If dm is currently running you should run "dm stop",
 copy any custom stack elements from the file backup to the new stack file
@@ -217,7 +217,7 @@ func HandleError(err error, soft bool) {
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		if !soft {
-			os.Exit(1)
+			panic(err)
 		}
 	}
 }
