@@ -43,7 +43,6 @@ var hostsListCmd = &cobra.Command{
 func init() {
 	RootCmd.AddCommand(hostsCmd)
 
-	hostsCmd.PersistentFlags().String("host", "", "The hostname to add")
 	hostsCmd.PersistentFlags().String("file", "/private/etc/hosts", "Full path to hostsfile")
 	hostsCmd.PersistentFlags().String("dhost", "0.0.0.0", "IP of the docker host")
 

@@ -28,12 +28,12 @@ var addCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		// read the whole file at once
 		hostFile, hostFileString := getHostsFile()
-		hostName, _ := hostsCmd.PersistentFlags().GetString("host")
 
-		if hostName == "" {
-			fmt.Println("--host cannot be blank")
+		if len(args) <= 0 {
+			fmt.Println("Must have host name as argument")
 			return
 		}
+		hostName := args[0]
 
 		if hostExists(hostName, hostFileString) {
 			fmt.Println("host already exists in hosts file")

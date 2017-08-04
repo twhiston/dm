@@ -31,7 +31,11 @@ var rmCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 
 		hostFile, hostFileString := getHostsFile()
-		hostName, _ := hostsCmd.PersistentFlags().GetString("host")
+		if len(args) <= 0 {
+			fmt.Println("Must have host name as argument")
+			return
+		}
+		hostName := args[0]
 		if hostName == "" {
 			fmt.Println("Must have --host parameter")
 			return
