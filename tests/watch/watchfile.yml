@@ -1,0 +1,41 @@
+#Example watchers file
+
+#API version
+version: "1"
+
+#List of watchers
+watchers:
+  # Simple examplo that watches a single directory at top level only
+  - dirs:
+    #dirs is a slice of directories to watch
+      - ./watched
+    commands:
+    #commands is a slice of commands to be executed, when any of the watched directories change
+      - ./hello.sh
+    #if recursive all the folders will be watched
+    recursive: false
+    #TODO - ADD WATCH TYPE?
+
+  # Simple single directory test of recursion
+  - dirs:
+      - ./watched/into
+    commands:
+      - ./d.sh
+    recursive: true
+  # Multiple directories and commands, no recursion
+  - dirs:
+      - ./watched/into
+      - ./watched/outof
+    commands:
+      - ./hello.sh
+      - ./d.sh
+    recursive: false
+  # Multiple directories and commands, recursion, direct command call
+  - dirs:
+        - ./watched/into
+        - ./watched/outof
+      commands:
+        - ./hello.sh
+        - ./d.sh
+        - go run test.go
+      recursive: true

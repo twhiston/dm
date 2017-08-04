@@ -196,11 +196,11 @@ func copyFileContents(src, dst string) (err error) {
 //RunScript runs a script by name, passing in args.
 //This will either fail and exit completely or will return output
 func RunScript(name string, args ...string) string {
-	cmd := exec.Command(name, args...)
+	command := exec.Command(name, args...)
 	var out, stderr bytes.Buffer
-	cmd.Stdout = &out
-	cmd.Stderr = &stderr
-	err := cmd.Run()
+	command.Stdout = &out
+	command.Stderr = &stderr
+	err := command.Run()
 	if err != nil {
 		fmt.Println(err.Error() + ":" + stderr.String())
 		os.Exit(1)
