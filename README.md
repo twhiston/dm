@@ -34,7 +34,7 @@ Dm tries to make it easier to do docker development on your mac. This means:
     - Makes ~/ a docker volume so you can easily bind project files to containers
 - Giving you an easy way to use hostnames with your containers
     - add env var VIRTUAL_HOST to your docker compose
-    - run `dm hosts add myhostname.dev`
+    - run `dm hosts add --host=myhostname.dev`
 - Lots more
     - run `dm` to see all the base commands
     - run `dm {command_name} -h` to see all available subcommands and help
