@@ -79,6 +79,7 @@ var initNfsCmd = &cobra.Command{
 		uid := strings.Trim(viper.GetString("uid"), "\r\n")
 		s += uid + ":" + viper.GetString("group") + " \n"
 		s = strings.TrimSpace(s)
+		s += "\n" //Must end with a blank line or the nfs script does not properly iterate the last value
 		data = []byte(s)
 		WriteAsset(nfsDir+"/etc/d4m-nfs-mounts.txt", data)
 		viper.Set("init.nfs", true)
