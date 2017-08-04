@@ -26,7 +26,7 @@ import (
 var helpCmd = &cobra.Command{
 	Use:   "help",
 	Short: "Helper commands,",
-	Long:  `For help usng the command itself use the --help or -h flags`,
+	Long:  `For help using the command itself use the --help or -h flags`,
 }
 
 var helpVersionCmd = &cobra.Command{

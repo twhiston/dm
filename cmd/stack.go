@@ -27,13 +27,24 @@ var stackCmd = &cobra.Command{
 	Short: "start the containers only",
 	Long:  `The weird command name ensure that this gets sorted last in the child commands :(`,
 	Run: func(cmd *cobra.Command, args []string) {
-		//docker compose up
 		fmt.Println("---> Starting dm containers")
 		RunScript("/bin/sh", "-c", "docker-compose -f "+viper.GetString("data_dir")+"/dm.yml up -d")
 		listContainers()
 	},
 }
 
+var cleanStackCmd = &cobra.Command{
+	Use:   "stack",
+	Short: "clean stack",
+	Long:  `delete all containers in the stack file`,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println("---> Deleting dm stack containers")
+		RunScript("/bin/sh", "-c", "docker-compose -f "+viper.GetString("data_dir")+"/dm.yml rm -f")
+
+	},
+}
+
 func init() {
 	startCmd.AddCommand(stackCmd)
+	cleanCmd.AddCommand(cleanStackCmd)
 }
