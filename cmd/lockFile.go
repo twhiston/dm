@@ -27,7 +27,7 @@ func getLockFileAbsolutePath() string {
 func createLockFile(forceFlag bool) {
 	lockFile := getLockFileAbsolutePath()
 
-	if _, err := os.Stat(lockFile); os.IsNotExist(err) || forceFlag == true {
+	if _, err := os.Stat(lockFile); os.IsNotExist(err) || forceFlag {
 
 		err := ioutil.WriteFile(lockFile, []byte("lock"), 0644)
 		if err != nil {
@@ -35,7 +35,7 @@ func createLockFile(forceFlag bool) {
 			os.Exit(1)
 		}
 	} else {
-		fmt.Println("	Cannot start, lock file already exists, run stop first or use -f --force flag")
+		fmt.Println("Cannot start, lock file already exists, run stop first or use -f --force flag")
 		os.Exit(1)
 	}
 }

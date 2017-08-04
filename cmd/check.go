@@ -73,11 +73,11 @@ var dockerReqCmd = &cobra.Command{
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := exec.Command("docker").Run(); err != nil {
-			return errors.New("	---> Could not find docker on your system\n	     Please install Docker for Mac before running this program\n 	     https://docs.docker.com/docker-for-mac")
+			return errors.New("---> Could not find docker on your system\nPlease install Docker for Mac before running this program\n 	     https://docs.docker.com/docker-for-mac")
 		}
 		_, exists := os.LookupEnv("DOCKER_HOST")
 		if exists {
-			return errors.New("	Found something checking for docker envs.\n	This suggests you have the old docker toolbox, please install docker for mac and unset docker vars\n 	See: https://docs.docker.com/docker-for-mac/docker-toolbox/#/setting-up-to-run-docker-for-mac")
+			return errors.New("Found something checking for docker envs.\nThis suggests you have the old docker toolbox, please install docker for mac and unset docker vars\n 	See: https://docs.docker.com/docker-for-mac/docker-toolbox/#/setting-up-to-run-docker-for-mac")
 		}
 		return nil
 	},
@@ -89,7 +89,7 @@ var socatReqCmd = &cobra.Command{
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := exec.Command("socat", "-V").Run(); err != nil {
-			return errors.New("	---> Could not find socat on your system\n		Try `brew install socat`")
+			return errors.New("---> Could not find socat on your system\nTry `brew install socat`")
 		}
 		return nil
 	},
@@ -101,7 +101,7 @@ var apacheReqCmd = &cobra.Command{
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := exec.Command("apachectl", "stop").Run(); err != nil {
-			return errors.New("	---> Could not stop apache, try again with\n sudo dm check")
+			return errors.New("---> Could not stop apache, try again with\n sudo dm check")
 		}
 		return nil
 	},
@@ -112,6 +112,10 @@ var blackfireReqCmd = &cobra.Command{
 	Short: "Test if environment is correctly set for Blackfire",
 	Long:  `Will check if your environment variables contains BLACKFIRE_SERVER_ID`,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		fmt.Println("---> Blackfire recommendations")
+		fmt.Println("---> If you plan to use Blackfire, make sure that:")
+		fmt.Println("	- Xdebug is not activated in your application container")
+		fmt.Println("	- Blackfire Probe is installed in your application container")
 		if os.Getenv("BLACKFIRE_SERVER_ID") == "" || os.Getenv("BLACKFIRE_SERVER_TOKEN") == "" {
 			return errors.New(`		/!\\ ERROR /!\\
 		It seems that your environment is not set properly

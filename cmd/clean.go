@@ -15,26 +15,24 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
-// startBlackfireCmd represents the startXdebug command
-var startBlackfireCmd = &cobra.Command{
-	Use:   "blackfire",
-	Short: "Checks if environment is correctly set for Blackfire",
-	Long:  ``,
+// cleanCmd represents the clean command
+var cleanCmd = &cobra.Command{
+	Use:   "clean",
+	Short: "Cleanup your environment",
+	Long: `Other commands may optionally implement a clean subcommand, which will do something to clean up your environment for you.
+	Running the base clean command will execute all of the clean steps, similarly to start, run with --help or -h to see subcommands`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("	---> Blackfire recommendations")
-		fmt.Println("	---> If you plan to use Blackfire, make sure that:")
-		fmt.Println("		- Xdebug is not activated in your application container")
-		fmt.Println("		- Blackfire Probe is installed in your application container")
-		fmt.Println("		- The following command passes successfully:")
-		fmt.Println("			 dm check blackfire")
+
+		for _, element := range cmd.Commands() {
+			// element is the element from someSlice for where we are
+			element.Run(cmd, args)
+		}
 	},
 }
 
 func init() {
-	startCmd.AddCommand(startBlackfireCmd)
+	RootCmd.AddCommand(cleanCmd)
 }

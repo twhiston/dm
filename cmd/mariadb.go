@@ -33,22 +33,22 @@ var mariadbInitCmd = &cobra.Command{
 		var mariaDir = getMariaDir()
 		if _, err := os.Stat(mariaDir); os.IsNotExist(err) {
 			//Install stuff if it doesnt exist
-			fmt.Println("	---> Setup Mariadb")
-			fmt.Print("		---> Creating mariadb dir: ")
+			fmt.Println("---> Setup Mariadb")
+			fmt.Print("---> Creating mariadb dir: ")
 			fmt.Println(mariaDir)
 			os.Mkdir(mariaDir, 0777)
 
-			fmt.Print("		---> Creating mariadb data dir: ")
+			fmt.Print("---> Creating mariadb data dir: ")
 			var mariaDataDir = mariaDir + "/data"
 			fmt.Println(mariaDataDir)
 			os.Mkdir(mariaDataDir, 0777)
 
-			fmt.Println("		---> Copying environment assets")
+			fmt.Println("---> Copying environment assets")
 			data := GetAsset("database/.env")
 			WriteAsset(mariaDir+"/.env", data)
 		}
 		viper.Set("init.mariadb", true)
-		fmt.Println("	---> MariaDb Initialized <--- ")
+		fmt.Println("---> MariaDb Initialized <--- ")
 	},
 }
 

@@ -26,11 +26,16 @@ import (
 var rmCmd = &cobra.Command{
 	Use:   "rm",
 	Short: "remove a hosts file entry",
-	Long:  `Remove a site from the local hosts file entry`,
+	Long: `Remove a site from the local hosts file entry.
+	dHost + " " + hostName forms a regexp which must compile and be found in the hosts file to be removed`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		hostFile, hostFileString := getHostsFile()
-		hostName, _ := hostsCmd.PersistentFlags().GetString("host")
+		if len(args) <= 0 {
+			fmt.Println("Must have host name as argument")
+			return
+		}
+		hostName := args[0]
 		if hostName == "" {
 			fmt.Println("Must have --host parameter")
 			return
