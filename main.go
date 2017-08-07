@@ -20,7 +20,7 @@ import (
 
 var (
 	//VERSION - Current application version
-	VERSION = "1.0.0-beta1"
+	VERSION = "1.0.0-beta2"
 	//STACK_VERSION - Current stack file version
 	STACK_VERSION = "1.1"
 )
