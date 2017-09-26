@@ -16,12 +16,18 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 	"io/ioutil"
 	"os"
+	"time"
 )
 
 func getLockFileAbsolutePath() string {
-	return getConfigPath() + "/.lock"
+	cp := viper.GetString("lock_path")
+	if cp == "" {
+		cp = "/tmp"
+	}
+	return cp + "/.dmlock"
 }
 
 func createLockFile(forceFlag bool) {
@@ -29,7 +35,7 @@ func createLockFile(forceFlag bool) {
 
 	if _, err := os.Stat(lockFile); os.IsNotExist(err) || forceFlag {
 
-		err := ioutil.WriteFile(lockFile, []byte("lock"), 0644)
+		err := ioutil.WriteFile(lockFile, makeTimestamp(), 0644)
 		if err != nil {
 			fmt.Println("Could not write lock file: " + lockFile)
 			os.Exit(1)
@@ -38,6 +44,11 @@ func createLockFile(forceFlag bool) {
 		fmt.Println("Cannot start, lock file already exists, run stop first or use -f --force flag")
 		os.Exit(1)
 	}
+}
+
+func makeTimestamp() []byte {
+	stamp := time.Now().Unix()
+	return []byte(fmt.Sprintf("%d", stamp))
 }
 
 func deleteLockFile() {
